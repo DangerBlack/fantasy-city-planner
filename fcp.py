@@ -6,6 +6,7 @@ from random import randrange
 from rect import Point
 from rect import Rect
 from hull import *
+#from multiprocessing import Pool
 
 
 FONT_SIZE=20
@@ -32,7 +33,7 @@ SUGGESTED_INHABITANTS_BY_LONDON=((CITY_SIZE_X*METER_PIXEL_RATIO)*(CITY_SIZE_Y*ME
 print("Suggested inhabitants: "+str(SUGGESTED_INHABITANTS_BY_LONDON))
 
 INHABITANTS=6400
-RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL']
+RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALLno']
 WEALTH=6 #1-10
 PLACES=['CASTLE','SANCTUARY','CHURCH']
 DEFENCE=1 #1-10
@@ -71,6 +72,8 @@ defaultPlace['ARMOR_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC3300')
 defaultPlace['WEAPON_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#0000FF')
 defaultPlace['SMITHY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#0000FF')#FUCINA
 defaultPlace['INN']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC6600')
+defaultPlace['BARRACK']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#666666')#CASERMA
+defaultPlace['HERBALISTS']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#669900')
 defaultPlace['GUILD_OF_WARRIOR']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#666666')
 defaultPlace['GUILD_OF_ARTIST']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#00FF99')
 defaultPlace['GUILD_OF_THIEF']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FFFFFF')
@@ -134,9 +137,13 @@ if((WEALTH>4)and(not 'BAKERY' in PLACES)):
     print('inconsistency HUMAN WEALTH but not BAKERY')
     PLACES.append('BAKERY')
 
-if((WEALTH>7)and(not 'INN' in PLACES)):
-    print('inconsistency HIGH WEALTH but not INN')
-    PLACES.append('INN')
+if((WEALTH>4)and(not 'BARRACK' in PLACES)):
+    print('inconsistency HUMAN WEALTH but not BARRACK')
+    PLACES.append('BARRACK')
+
+if((WEALTH>5)and(not 'HERBALISTS' in PLACES)):
+    print('inconsistency HIGH WEALTH but not HERBALISTS')
+    PLACES.append('HERBALISTS')
 
 if((WEALTH>7)and(not 'WALL' in PLACES)):
     print('inconsistency HIGH WEALTH but no WALL')
@@ -151,7 +158,7 @@ if((WEALTH>3)and(PLACES.count('CHURCH')<WEALTH)):
     print('inconsistency FEW CHURCH despite GOOD WEALTH')
     for i in range(0,WEALTH-PLACES.count('CHURCH')):
         PLACES.append('CHURCH')
-    
+
 if((WEALTH>7)and(not 'MARKET' in PLACES)):
     print('inconsistency HIGH WEALTH but not MARKET')
     PLACES.append('MARKET')
@@ -522,7 +529,7 @@ for i in range(0,len(PLACES)):
     draw.rectangle((CITY_SIZE_X-maxsize,50+i*(FONT_SIZE)+1,CITY_SIZE_X-maxsize+5,50+i*(FONT_SIZE)+FONT_SIZE-2),fill=defaultPlace[PLACES[i]][3])
     draw.text((CITY_SIZE_X-maxsize+10,50+i*(FONT_SIZE)),PLACES[i][0:1]+": "+PLACES[i].lower().title(),fill="red",font=font)
 
-
+    
 LUNGHEZZA_CAMPIONE=200
 draw.line((CITY_SIZE_X-5-LUNGHEZZA_CAMPIONE,CITY_SIZE_Y-10,CITY_SIZE_X-5,CITY_SIZE_Y-10),width=2,fill='red');
 TEXT=str(METER_PIXEL_RATIO*LUNGHEZZA_CAMPIONE)+' m'
