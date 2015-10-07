@@ -4,7 +4,7 @@ import random
 from random import randrange
 from rect import Point
 from rect import Rect
-
+from hull import *
 
 
 FONT_SIZE=20
@@ -21,14 +21,14 @@ CITY_SIZE_X=800
 CITY_SIZE_Y=600
 
 INHABITANTS=1000
-RESOURCES=['WOOD','FISH','LEATHER','HORSE']
+RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL']
 WEALTH=6 #1-10
-PLACES=['CASTLE','SANCTUARY','MARKET','CHURCH']
+PLACES=['CASTLE','SANCTUARY','CHURCH']
 DEFENCE=1 #1-10
 SEA=("NO","NO","NO","NO")
 
 MAX_PLACE_SIZE=20
-MIN_PLACE_SIZE=10
+MIN_PLACE_SIZE=3
 
 DEFAULT_COLOR='#505050'
 
@@ -53,8 +53,9 @@ defaultPlace['SANCTUARY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'free','#009999')
 defaultPlace['CHURCH']=(MAX_PLACE_SIZE,MAX_PLACE_SIZE*2,'center','#009999')
 defaultPlace['CATHEDRAL']=(MAX_PLACE_SIZE,MAX_PLACE_SIZE*3,'center','#009999')
 defaultPlace['SAWMILL']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'rural','#333300')#SEGHERIA
-defaultPlace['BAKERY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'rural','#FFCC00')
+defaultPlace['BAKERY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#FFCC00')
 defaultPlace['LEATHER_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC3300')
+defaultPlace['TAILOR_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC6699')
 defaultPlace['STABLE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#996633')
 defaultPlace['ARMOR_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC3300')
 defaultPlace['WEAPON_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#0000FF')
@@ -66,6 +67,11 @@ defaultPlace['GUILD_OF_THIEF']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FFFFFF
 defaultPlace['GUILD_OF_MAGE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FF9900')
 defaultPlace['GUILD_OF_BUILDER']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FF0000')
 defaultPlace['GUILD_OF_HERBALISTS']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#669900')
+defaultPlace['GUILD_OF_GOLDSMITH']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FFFF00')
+defaultPlace['GUILD_OF_IRONMONGER']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#5F5F5F')
+
+defaultPlace['THEATRE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#0066CC')
+defaultPlace['ARENA']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#CC0000')
 defaultPlace['unknown']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'center','#000066')
 
 
@@ -97,6 +103,10 @@ if(('LEATHER' in RESOURCES)and(not 'LEATHER_SHOP' in PLACES)):
 if(('HORSE' in RESOURCES)and(not 'STABLE' in PLACES)):
 	print('inconsistency HORSE but not STABLE')
 	PLACES.append('STABLE')	
+	
+if(('SILK' in RESOURCES)and(not 'TAILOR_SHOP' in PLACES)):
+	print('inconsistency SILK but not TAILOR_SHOP')
+	PLACES.append('TAILOR_SHOP')	
 
 if(('WEAPON_SHOP' in PLACES)and(not 'CAVE' in RESOURCES)):
 	print('inconsistency WEAPON_SHOP but not CAVE')
@@ -118,7 +128,11 @@ if((WEALTH>7)and(not 'INN' in PLACES)):
 	print('inconsistency HIGH WEALTH but not INN')
 	PLACES.append('INN')
 
-if(PLACES.count('INN')<WEALTH/2):
+if((WEALTH>7)and(not 'WALL' in PLACES)):
+	print('inconsistency HIGH WEALTH but no WALL')
+	RESOURCES.append('WALL')
+
+if((WEALTH>3)and(PLACES.count('INN')<WEALTH/2)):
 	print('inconsistency FEW INN despite GOOD WEALTH')
 	for i in range(0,WEALTH/2-PLACES.count('INN')):
 		PLACES.append('INN')
@@ -131,6 +145,14 @@ if((WEALTH>7)and(not 'CHURCH' in PLACES)):
 	print('inconsistency HIGH WEALTH but not CHURCH')
 	PLACES.append('CHURCH')
 	
+if((WEALTH>7)and(not 'THEATRE' in PLACES)and(INHABITANTS>2000)):
+	print('inconsistency HIGH WEALTH but not THEATRE and lot of INHABITANTS')
+	PLACES.append('THEATRE')	
+	
+if((WEALTH>7)and(not 'ARENA' in PLACES)and(INHABITANTS>2500)):
+	print('inconsistency HIGH WEALTH but not ARENA and lot of INHABITANTS')
+	PLACES.append('ARENA')
+	
 if((WEALTH>8)and(not 'CATHEDRAL' in PLACES)):
 	print('inconsistency VERY HIGH WEALTH but not CATHEDRAL')
 	PLACES.append('CATHEDRAL')
@@ -139,11 +161,11 @@ if((WEALTH>8)and(not 'CASTLE' in PLACES)):
 	print('inconsistency VERY HIGH WEALTH but not CASTLE')
 	PLACES.append('CASTLE')
 	
-if((INHABITANTS>5000)and(not 'CASTLE' in PLACES)):
+if((INHABITANTS>3000)and(not 'CASTLE' in PLACES)):
 	print('inconsistency VERY HIGH INHABITANTS but not CASTLE')
 	PLACES.append('CASTLE')
 	
-if((INHABITANTS>5000)and(not 'MARKET' in PLACES)):
+if((INHABITANTS>3000)and(not 'MARKET' in PLACES)):
 	print('inconsistency VERY HIGH INHABITANTS but not MARKET')
 	PLACES.append('MARKET')
 	
@@ -197,7 +219,7 @@ def createPlacePoint(p):
 	return place
 	
 def createPlace(old_place):
-	p1=Point(random.randint(old_place.top_left().x-MAX_PLACE_SIZE*WEALTH,old_place.top_left().x+MAX_PLACE_SIZE*WEALTH),	random.randint(old_place.top_left().y-MAX_PLACE_SIZE*WEALTH,old_place.top_left().y+MAX_PLACE_SIZE*WEALTH))
+	p1=Point(random.randint(old_place.top_left().x-MAX_PLACE_SIZE,old_place.top_left().x+MAX_PLACE_SIZE),	random.randint(old_place.top_left().y-MAX_PLACE_SIZE,old_place.top_left().y+MAX_PLACE_SIZE))
 	p2=Point(random.randint(p1.x+MIN_PLACE_SIZE,p1.x+MAX_PLACE_SIZE),	random.randint(p1.y+MIN_PLACE_SIZE,p1.y+MAX_PLACE_SIZE))
 	place=Rect(p1,p2)
 	return place
@@ -267,9 +289,29 @@ def createPolygonFromRect(r,ndot):
 	return polygon
 	
 
-homeNumberMax=int(INHABITANTS/(15-WEALTH))
-homeNumberMin=int(INHABITANTS/(12-WEALTH))
+def perimetralWall(house_pure):
+	points=[]
+	for h in house_pure:
+		if(h.name=='HOUSE') or (not defaultPlace[h.name][2]=='rural') or (not defaultPlace[h.name][2]=='free'):
+			dx=h.right-h.left
+			dy=h.bottom-h.top
+			x=h.left-dx
+			y=h.top-dy
+			if(x>CITY_SIZE_X/2):
+				x=h.right+dx
+			if(y>CITY_SIZE_Y/2):
+				y=h.bottom+dy
+			points.append((x,y))
+	perim=convex_hull(points)
+	perim.append(perim[0])
+	return perim
+	
+
+homeNumberMax=int(INHABITANTS/(15-WEALTH))#dai 15 abitandi per casa di 49 mquadri <-> 5 abitanti per casa di 400 mquadri | 1000/9 => 111 house
+homeNumberMin=int(INHABITANTS/(12-WEALTH))#dai 12 abitanti per casa di 49 mquadri <-> 2 abitanti per casa di 400 mquadri | 1000/6 => 166 house
 homeNumber=random.randint(homeNumberMax,homeNumberMin)
+
+#homeNumber=5
 
 buildings=[]
 
@@ -299,7 +341,8 @@ if('WOOD' in RESOURCES):
 						place.move(random.randint(0,4),random.randint(20,30))	
 print('[10/10]')
 print('Genero i Fiumi')
-if('RIVERX' in RESOURCES):
+
+for p in range(0,RESOURCES.count('RIVERX')):
 	rivert=[]
 	liney=random.randint(0,CITY_SIZE_Y)
 	river_size=random.randint(3,20)
@@ -314,7 +357,7 @@ if('RIVERX' in RESOURCES):
 		f.move(1,prev)
 	nature.extend(rivert)
 
-if('RIVERY' in RESOURCES):
+for p in range(0,RESOURCES.count('RIVERY')):
 	rivert=[]
 	linex=random.randint(0,CITY_SIZE_X)
 	river_size=random.randint(3,20)
@@ -328,7 +371,7 @@ if('RIVERY' in RESOURCES):
 		f.move(2,prev)
 	nature.extend(rivert)		
 
-if('CAVE' in RESOURCES):
+for p in range(0,RESOURCES.count('CAVE')):
 	p=Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2))
 	MPS=200
 	mps=30
@@ -345,39 +388,61 @@ print('Genero gli edifici')
 #CREAZIONE EDIFICI
 for i in range(0,len(PLACES)):
 	#place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
-	place=createPlaceDefault(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)),PLACES[i])
-	place.set_name(PLACES[i])
-	buildings.append(place)
+	if(not ((defaultPlace[PLACES[i]][2]=='rural') or (defaultPlace[PLACES[i]][2]=='free'))):
+		place=createPlaceDefault(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)),PLACES[i])
+		place.set_name(PLACES[i])
+		buildings.append(place)
 
 print('genero case libere')
-for i in range(0,5):
+for i in range(0,homeNumber/20):
 	place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
 	buildings.append(place)
 
-print('genero case dipendenti')
-for i in range(5,homeNumber):
-	old_place=buildings[random.randint(0,len(buildings)-1)]
-	place=createPlace(old_place)
-	buildings.append(place)
-	
+old_town=homeNumber/100*20
+new_town=homeNumber/100*80
 
-print('Controllo conflitti edifici')
-touch=False
-while(not touch):
+def generaPlace(buildings,homeNumber):
+	print('genero case dipendenti')
+	for i in range(5,homeNumber):
+		old_place=buildings[random.randint(0,len(buildings)-1)]
+		place=createPlace(old_place)
+		buildings.append(place)
+
+	print('Controllo conflitti edifici')
+	touch=False
+	while(not touch):	
+		touch=True
+		for place in buildings:		
+			for place2 in buildings:
+				if(not (id(place)==id(place2))):
+					if(place.overlaps(place2)):
+						if(place.name=='HOUSE'):
+							place.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
+							#print('muovo una casa '+place.name)
+							touch=False
+						else:
+							place2.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
+							#print('muovo una casa '+place2.name)
+							touch=False
+	return buildings
 	
-	touch=True
-	for place in buildings:		
-		for place2 in buildings:
-			if(not (id(place)==id(place2))):
-				if(place.overlaps(place2)):
-					if(place.name=='HOUSE'):
-						place.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
-						#print('muovo una casa '+place.name)
-						touch=False
-					else:
-						place2.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
-						#print('muovo una casa '+place2.name)
-						touch=False
+buildings.extend(generaPlace(buildings,old_town))
+
+perim=()
+if( 'WALL' in RESOURCES ):
+	perim= perimetralWall(buildings)
+
+print(perim)
+
+#CREAZIONE EDIFICI RURALI
+for i in range(0,len(PLACES)):
+	#place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
+	if(defaultPlace[PLACES[i]][2]=='rural') or (defaultPlace[PLACES[i]][2]=='free'):
+		place=createPlaceDefault(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)),PLACES[i])
+		place.set_name(PLACES[i])
+		buildings.append(place)
+		
+buildings.extend(generaPlace(buildings,new_town))	
 
 print('Controllo conflitti natura')
 for place in list(buildings):
@@ -392,13 +457,19 @@ for place in list(buildings):
 						except ValueError as e:
 							x=5
 #FINE CREAZIONE EDIFICI
-						
+
+
+#STAMPA NATURA						
 for n in nature:
 	if(not n.name=='CAVE'):
 		draw.rectangle(n.get_list(), fill=defaultResurce[n.name][0])
 	else:
 		draw.polygon(createPolygonFromRect(n,5), fill=defaultResurce[n.name][0])
-						
+				
+#STAMPA CINTA MURARIA
+draw.line(perim,width=2,fill='#1A1A1A');				
+
+#STAMPA EDIFICI		
 for place in buildings:
 	color=DEFAULT_COLOR;
 	if(not place.name=='HOUSE'):
@@ -408,11 +479,13 @@ for place in buildings:
 	else:
 		draw.rectangle(place.get_list(), outline=color)
 
+#GENERA DIMENSIONE TESTO LEGENDA SU MAPPA
 maxsize=1
 for i in range(0,len(PLACES)):
 	if(font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]>maxsize):
 		maxsize=font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]
-
+		
+#STAMPA LEGENDA
 maxsize=maxsize+30
 draw.rectangle((CITY_SIZE_X-maxsize-5,45,CITY_SIZE_X-5,50+len(PLACES)*(FONT_SIZE+1)), fill='white' )
 draw.rectangle((CITY_SIZE_X-maxsize-5,45,CITY_SIZE_X-5,50+len(PLACES)*(FONT_SIZE+1)), outline='black' )
@@ -420,9 +493,11 @@ for i in range(0,len(PLACES)):
 	draw.rectangle((CITY_SIZE_X-maxsize,50+i*(FONT_SIZE)+1,CITY_SIZE_X-maxsize+5,50+i*(FONT_SIZE)+FONT_SIZE-2),fill=defaultPlace[PLACES[i]][3])
 	draw.text((CITY_SIZE_X-maxsize+10,50+i*(FONT_SIZE)),PLACES[i][0:1]+": "+PLACES[i].lower().title(),fill="red",font=font)
 
-draw.line((CITY_SIZE_X-105,CITY_SIZE_Y-10,CITY_SIZE_X-5,CITY_SIZE_Y-10),width=2,fill='red');
-TEXT=str(METER_PIXEL_RATIO*100)+' m'
-draw.text((CITY_SIZE_X-75,CITY_SIZE_Y-10-(FONT_SIZE)),TEXT,fill="red",font=font)
+
+LUNGHEZZA_CAMPIONE=250
+draw.line((CITY_SIZE_X-5-LUNGHEZZA_CAMPIONE,CITY_SIZE_Y-10,CITY_SIZE_X-5,CITY_SIZE_Y-10),width=2,fill='red');
+TEXT=str(METER_PIXEL_RATIO*LUNGHEZZA_CAMPIONE)+' m'
+draw.text((CITY_SIZE_X-LUNGHEZZA_CAMPIONE+LUNGHEZZA_CAMPIONE/3,CITY_SIZE_Y-10-(FONT_SIZE)),TEXT,fill="red",font=font)
 
 draw.text((10,10),"City of "+CITY_NAME,fill="red",font=font)
 

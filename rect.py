@@ -226,3 +226,7 @@ class Rect:
         return "%s(%r, %r)" % (self.__class__.__name__,
                                Point(self.left, self.top),
                                Point(self.right, self.bottom))
+    def angle(self,other):
+		if(self.left-other.left)==0:
+			return 1000000000000
+		return (other.top-self.top)/(other.left-self.left)
