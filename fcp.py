@@ -32,7 +32,7 @@ CITY_SIZE_Y=600
 SUGGESTED_INHABITANTS_BY_LONDON=((CITY_SIZE_X*METER_PIXEL_RATIO)*(CITY_SIZE_Y*METER_PIXEL_RATIO))*80000/1500000;
 print("Suggested inhabitants: "+str(SUGGESTED_INHABITANTS_BY_LONDON))
 
-INHABITANTS=20400
+INHABITANTS=6400
 RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL']
 WEALTH=6 #1-10
 PLACES=['CASTLE','SANCTUARY','CHURCH']
@@ -440,7 +440,32 @@ old_town=homeNumber/100*20
 new_town=homeNumber/100*80
 
 print('Old city will have '+str(old_town)+' house') 
-def conflictSolver(field,buildings,area):
+
+
+def deduce_direction(field,duty):
+    YY=field[0]
+    XX=field[1]
+    direction=[0,1,2,3]
+    if XX==0 and YY==0:
+        direction.remove(2)
+        direction.remove(3)
+    if XX==1 and YY==0:
+        direction.remove(0)
+        direction.remove(3)
+    if XX==0 and YY==1:
+        direction.remove(2)
+        direction.remove(1)
+    if XX==1 and YY==1:
+        direction.remove(0)
+        direction.remove(1)
+    return direction
+def get_direction(field,duty):
+    direction=[0,1,2,3]
+    if(duty>0.1) and (duty*random.random()>0.5):
+            direction=deduce_direction(field,duty)
+    return direction[random.randint(0,len(direction)-1)]
+#THIS METHOD IS DONE PARARREL DUE TO THE HUGE AMOUNT OF WORK!
+def conflictSolver(field,buildings,area,duty):
     top=[]
     left=[]
     right=[]
@@ -453,7 +478,7 @@ def conflictSolver(field,buildings,area):
                 if(not (id(place)==id(place2))):
                     if(place.overlaps(place2)):
                         if(place.name=='HOUSE'):
-                            place.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
+                            place.move(get_direction(field,duty),random.randint(0,int(MAX_PLACE_SIZE)))
                             if(not area.overlaps(place)):
                                 tripla=random.randint(0,100)
                                 #print('mi spingo fuori '+str(tripla))
@@ -469,7 +494,7 @@ def conflictSolver(field,buildings,area):
                                             if(place.bottom>area.bottom):
                                                 bottom.append(place)
                                             else:
-                                                print('ommmioddio ho finito le dimensioni '+str(tripla))
+                                                print('Martin you are not thinking quadrimensionally '+str(tripla))
                                                 print(str(place)+' '+str(tripla))
                                                 print(str(area)+' '+str(tripla))
                                 if(place in buildings):
@@ -477,7 +502,7 @@ def conflictSolver(field,buildings,area):
                             touch=False
                             break
                         else:
-                            place2.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
+                            place2.move(get_direction(field,duty),random.randint(0,int(MAX_PLACE_SIZE)))
                             if(not area.overlaps(place2)):
                                 tripla=random.randint(0,100)
                                 #print('mi spingo fuori '+str(tripla))
@@ -493,7 +518,7 @@ def conflictSolver(field,buildings,area):
                                             if(place2.bottom>area.bottom):
                                                 bottom.append(place2)
                                             else:
-                                                print('ommmioddio ho finito le dimensioni '+str(tripla))
+                                                print('Martin you are not thinking quadrimensionally '+str(tripla))
                                                 print(str(place2)+' '+str(tripla))
                                                 print(str(area)+' '+str(tripla))
                                 if(place2 in buildings):
@@ -537,7 +562,7 @@ def generaPlace(buildings,homeNumber):
         buildings.append(place)    
     return buildings            
 
-def map_all_and_work(zone):
+def map_all_and_work(zone,duty):
     workers=[]
     pool = Pool()
     nw=Rect(Point(0,0),Point(CITY_SIZE_X/2,CITY_SIZE_Y/2))
@@ -548,10 +573,10 @@ def map_all_and_work(zone):
     #draw.rectangle(ne.get_list(), outline=DEFAULT_COLOR, fill='yellow' )
     #draw.rectangle(sw.get_list(), outline=DEFAULT_COLOR, fill='blue' )
     #draw.rectangle(se.get_list(), outline=DEFAULT_COLOR, fill='orange' )
-    workers.append(pool.apply_async(conflictSolver,[(0,0),zone[0][0],nw]))
-    workers.append(pool.apply_async(conflictSolver,[(0,1),zone[0][1],ne]))         
-    workers.append(pool.apply_async(conflictSolver,[(1,0),zone[1][0],sw]))
-    workers.append(pool.apply_async(conflictSolver,[(1,1),zone[1][1],se])) 
+    workers.append(pool.apply_async(conflictSolver,[(0,0),zone[0][0],nw,duty]))
+    workers.append(pool.apply_async(conflictSolver,[(0,1),zone[0][1],ne,duty]))         
+    workers.append(pool.apply_async(conflictSolver,[(1,0),zone[1][0],sw,duty]))
+    workers.append(pool.apply_async(conflictSolver,[(1,1),zone[1][1],se,duty])) 
 
     pool.close()
     pool.join()
@@ -564,30 +589,30 @@ def map_all_and_work(zone):
         #print("index x:" +str(res[0][0]))
         #print("index y:" +str(res[0][1]))
         zone[res[0][0]][res[0][1]].extend(res[1])
-        XX=res[0][0]
-        YY=res[0][1]
-        if(YY-1>=0):#top
+        YY=res[0][0]
+        XX=res[0][1]
+        if((YY-1)>=0):#top
             if(len(res[2])>0):
                 scambi=True
-            zone[XX][YY-1].extend(res[2])
+            zone[YY-1][XX].extend(res[2])
         else:
             bimbi_perduti=bimbi_perduti+len(res[2])
-        if(XX-1>=0):#left
-            if(len(res[2])>0):
+        if((XX-1)>=0):#left
+            if(len(res[3])>0):
                 scambi=True
-            zone[XX-1][YY].extend(res[3])
+            zone[YY][XX-1].extend(res[3])
         else:
             bimbi_perduti=bimbi_perduti+len(res[3])
-        if(XX+1<=1):#right
-            if(len(res[2])>0):
+        if((XX+1)<=1):#right
+            if(len(res[4])>0):
                 scambi=True
-            zone[XX+1][YY].extend(res[4])
+            zone[YY][XX+1].extend(res[4])
         else:
             bimbi_perduti=bimbi_perduti+len(res[4])
-        if(YY+1<=1):#bottom
-            if(len(res[2])>0):
+        if((YY+1)<=1):#bottom
+            if(len(res[5])>0):
                 scambi=True
-            zone[XX][YY+1].extend(res[5])
+            zone[YY+1][XX].extend(res[5])
         else:
             bimbi_perduti=bimbi_perduti+len(res[5])
 
@@ -601,19 +626,43 @@ def not_less_bounds(number,lower,upper):
         return upper
     return number
 
+
+def test_temp(yy,xx,place):
+    nw=Rect(Point(0,0),Point(CITY_SIZE_X/2,CITY_SIZE_Y/2))
+    ne=Rect(Point(CITY_SIZE_X/2,0),Point(CITY_SIZE_X,CITY_SIZE_Y/2))
+    sw=Rect(Point(0,CITY_SIZE_Y/2),Point(CITY_SIZE_X/2,CITY_SIZE_Y))
+    se=Rect(Point(CITY_SIZE_X/2,CITY_SIZE_Y/2),Point(CITY_SIZE_X,CITY_SIZE_Y))
+    if(xx==0)and(yy==0):
+        if(not nw.overlaps(place)):
+            print('errore micidiale 1');
+    if(xx==0)and(yy==1):
+        if(not ne.overlaps(place)):
+            print('errore micidiale 2');
+    if(xx==1)and(yy==0):
+        if(not sw.overlaps(place)):
+            print('errore micidiale 3');
+    if(xx==1)and(yy==1):
+        if(not se.overlaps(place)):
+            print('errore micidiale 4');
 def mappa_zone(buildings):
     zone=[[[],[]],[[],[]]]    
     for place in buildings:
-            zone[not_less_bounds(int(place.left/(CITY_SIZE_X/2)),0,1)][not_less_bounds(int(place.top/(CITY_SIZE_Y/2)),0,1)].append(place)    
+            yy=not_less_bounds(int(place.top/(CITY_SIZE_Y/2)),0,1)
+            xx=not_less_bounds(int(place.left/(CITY_SIZE_X/2)),0,1)
+            test_temp(xx,yy,place)
+            zone[yy][xx].append(place)    
 
 
     scambi=True
+    duty=0
     while scambi:
         #print('Faccio iterazione')
-        res=map_all_and_work(zone)
+        res=map_all_and_work(zone,duty)
         zone=res[0]
         scambi=res[1]
+        duty=duty+0.1
 
+    print("Duty in my job:"+str(duty))
     buildings=[]
     for row in zone:
         for col in row:
@@ -639,7 +688,6 @@ for i in range(0,len(PLACESN)):
     place.set_name(PLACESN[i])
     buildings.append(place)
     
-
 buildings=generaPlace(buildings,new_town)
 buildings=mappa_zone(buildings)
 
