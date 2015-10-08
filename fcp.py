@@ -15,6 +15,8 @@ FONT_LIST=("Treamd.ttf","OldLondon.ttf","Ruritania.ttf")
 
 font = ImageFont.truetype(FONT_LIST[0], FONT_SIZE)
 
+#THIS IS ONLY FOR HUMAN READABLE USAGE
+KIND_OF_RESOURCES=('WOOD','FISH','LEATHER','PIG','HORSE','CAVE','SILK','WOOL')
 
 #PARAMETRI DI CONFIGURAZIONE INIZIALE DELLO SCRIPT
 METER_PIXEL_RATIO=0.5
@@ -33,7 +35,7 @@ SUGGESTED_INHABITANTS_BY_LONDON=((CITY_SIZE_X*METER_PIXEL_RATIO)*(CITY_SIZE_Y*ME
 print("Suggested inhabitants: "+str(SUGGESTED_INHABITANTS_BY_LONDON))
 
 INHABITANTS=6400
-RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL']
+RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL','CAVE']
 WEALTH=6 #1-10
 PLACES=['CASTLE','SANCTUARY','CHURCH']
 DEFENCE=1 #1-10
@@ -74,6 +76,9 @@ defaultPlace['SMITHY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#0000FF')#FUCINA
 defaultPlace['INN']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC6600')
 defaultPlace['BARRACK']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#666666')#CASERMA
 defaultPlace['HERBALISTS']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#669900')
+defaultPlace['LAZARETTO']=(MAX_PLACE_SIZE/2,MAX_PLACE_SIZE*2,'urban','#FFFFFF')
+defaultPlace['BUTCHER_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#FF9999')#macelleria
+defaultPlace['WHOREHOUSE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC0000')#BORDELLO
 defaultPlace['GUILD_OF_WARRIOR']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#666666')
 defaultPlace['GUILD_OF_ARTIST']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#00FF99')
 defaultPlace['GUILD_OF_THIEF']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FFFFFF')
@@ -82,9 +87,9 @@ defaultPlace['GUILD_OF_BUILDER']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FF00
 defaultPlace['GUILD_OF_HERBALISTS']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#669900')
 defaultPlace['GUILD_OF_GOLDSMITH']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FFFF00')
 defaultPlace['GUILD_OF_IRONMONGER']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#5F5F5F')
-
 defaultPlace['THEATRE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#0066CC')
 defaultPlace['ARENA']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#CC0000')
+defaultPlace['OBSERVATORY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'rural','#0000CC')
 defaultPlace['unknown']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'center','#000066')
 
 
@@ -117,8 +122,8 @@ if(('HORSE' in RESOURCES)and(not 'STABLE' in PLACES)):
     print('inconsistency HORSE but not STABLE')
     PLACES.append('STABLE') 
     
-if(('SILK' in RESOURCES)and(not 'TAILOR_SHOP' in PLACES)):
-    print('inconsistency SILK but not TAILOR_SHOP')
+if((('SILK' in RESOURCES) or ('WOOL' in RESOURCES)) and(not 'TAILOR_SHOP' in PLACES)):
+    print('inconsistency SILK or WOOL but not TAILOR_SHOP')
     PLACES.append('TAILOR_SHOP')    
 
 if(('WEAPON_SHOP' in PLACES)and(not 'CAVE' in RESOURCES)):
@@ -128,6 +133,10 @@ if(('WEAPON_SHOP' in PLACES)and(not 'CAVE' in RESOURCES)):
 if(('SMITHY' in PLACES)and(not 'CAVE' in RESOURCES)):
     print('inconsistency SMITHY but not CAVE')
     RESOURCES.append('CAVE')
+    
+if((('LEATHER' in RESOURCES) or ('PIG' in RESOURCES)) and(not 'BUTCHER_SHOP' in PLACES)):
+    print('inconsistency LEATHER or PIG but not BUTCHER_SHOP')
+    PLACES.append('BUTCHER_SHOP') 
 
 if((WEALTH<5)and(not 'SANCTUARY' in PLACES)):
     print('inconsistency ORRIBLE WEALTH but not SANCTUARY')
@@ -144,6 +153,10 @@ if((WEALTH>4)and(not 'BARRACK' in PLACES)):
 if((WEALTH>5)and(not 'HERBALISTS' in PLACES)):
     print('inconsistency HIGH WEALTH but not HERBALISTS')
     PLACES.append('HERBALISTS')
+    
+if((WEALTH>6)and(not 'BUTCHER_SHOP' in PLACES)):
+    print('inconsistency HIGH WEALTH but not BUTCHER_SHOP')
+    PLACES.append('BUTCHER_SHOP')
 
 if((WEALTH>7)and(not 'WALL' in PLACES)):
     print('inconsistency HIGH WEALTH but no WALL')
@@ -174,6 +187,10 @@ if((WEALTH>7)and(not 'THEATRE' in PLACES)and(INHABITANTS>2000)):
 if((WEALTH>7)and(not 'ARENA' in PLACES)and(INHABITANTS>2500)):
     print('inconsistency HIGH WEALTH but not ARENA and lot of INHABITANTS')
     PLACES.append('ARENA')
+
+if((WEALTH>8)and(not 'WHOREHOUSE' in PLACES)):
+    print('inconsistency VERY HIGH WEALTH but not WHOREHOUSE')
+    PLACES.append('WHOREHOUSE')
     
 if((WEALTH>8)and(not 'CATHEDRAL' in PLACES)):
     print('inconsistency VERY HIGH WEALTH but not CATHEDRAL')
