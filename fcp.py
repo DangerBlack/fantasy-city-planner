@@ -368,7 +368,7 @@ print('Building river')
 for p in range(0,RESOURCES.count('RIVERX')):
     rivert=[]
     liney=random.randint(0,CITY_SIZE_Y)
-    river_size=random.randint(3,20)
+    river_size=random.randint(3,120)
     for i in range(0,CITY_SIZE_X):
         element=Rect(Point(i,liney),Point(i,liney+river_size))
         element.set_name('RIVER')
@@ -383,7 +383,7 @@ for p in range(0,RESOURCES.count('RIVERX')):
 for p in range(0,RESOURCES.count('RIVERY')):
     rivert=[]
     linex=random.randint(0,CITY_SIZE_X)
-    river_size=random.randint(3,20)
+    river_size=random.randint(3,120)
     for i in range(0,CITY_SIZE_Y):
         element=Rect(Point(linex,i),Point(linex+river_size,i))
         element.set_name('RIVER')
