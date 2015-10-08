@@ -168,7 +168,7 @@ class Rect:
         self.bottom = max(y1, y2)
         
     def set_name(self,name):
-		self.name=name
+        self.name=name
 
     def contains(self, pt):
         """Return true if a point is inside the rectangle."""
@@ -182,19 +182,19 @@ class Rect:
                 self.top < other.bottom and self.bottom > other.top)
     
     def move(self,direction,distance):
-		if(direction==0):
-			self.left=self.left-distance
-			self.right=self.right-distance		
-		if(direction==1):
-			self.top=self.top-distance
-			self.bottom=self.bottom-distance		
-		if(direction==2):
-			self.right=self.right+distance
-			self.left=self.left+distance		
-		if(direction==3):
-			self.top=self.top+distance
-			self.bottom=self.bottom+distance
-		
+        if(direction==0):
+            self.left=self.left-distance
+            self.right=self.right-distance      
+        if(direction==1):
+            self.top=self.top-distance
+            self.bottom=self.bottom-distance        
+        if(direction==2):
+            self.right=self.right+distance
+            self.left=self.left+distance        
+        if(direction==3):
+            self.top=self.top+distance
+            self.bottom=self.bottom+distance
+        
     
     def top_left(self):
         """Return the top-left corner as a Point."""
@@ -216,8 +216,8 @@ class Rect:
     
     
     def get_list( self ):
-		return [self.left,self.top,self.right,self.bottom]
-		
+        return [self.left,self.top,self.right,self.bottom]
+        
     def __str__( self ):
         return "<Rect (%s,%s)-(%s,%s)>" % (self.left,self.top,
                                            self.right,self.bottom)
@@ -227,6 +227,9 @@ class Rect:
                                Point(self.left, self.top),
                                Point(self.right, self.bottom))
     def angle(self,other):
-		if(self.left-other.left)==0:
-			return 1000000000000
-		return (other.top-self.top)/(other.left-self.left)
+        if(self.left-other.left)==0:
+            return 1000000000000
+        return (other.top-self.top)/(other.left-self.left)
+    
+    def as_tuple(self):
+        return ((self.left,self.top),(self.right,self.bottom))

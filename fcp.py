@@ -6,8 +6,8 @@ from random import randrange
 from rect import Point
 from rect import Rect
 from hull import *
-#from multiprocessing import Pool
-
+from multiprocessing import Pool
+from functools import partial
 
 FONT_SIZE=20
 
@@ -32,8 +32,8 @@ CITY_SIZE_Y=600
 SUGGESTED_INHABITANTS_BY_LONDON=((CITY_SIZE_X*METER_PIXEL_RATIO)*(CITY_SIZE_Y*METER_PIXEL_RATIO))*80000/1500000;
 print("Suggested inhabitants: "+str(SUGGESTED_INHABITANTS_BY_LONDON))
 
-INHABITANTS=6400
-RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALLno']
+INHABITANTS=20400
+RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL']
 WEALTH=6 #1-10
 PLACES=['CASTLE','SANCTUARY','CHURCH']
 DEFENCE=1 #1-10
@@ -61,7 +61,7 @@ defaultPlace['CASTLE']=((MIN_PLACE_SIZE*WEALTH/2),(MAX_PLACE_SIZE*WEALTH)/2,'cen
 defaultPlace['MARKET']=(30,20*WEALTH,'center','#FFCC99')
 defaultPlace['PARK']=(30,35*WEALTH,'urban','#2EB82E')
 defaultPlace['SANCTUARY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'free','#009999')
-defaultPlace['CHURCH']=(MAX_PLACE_SIZE,MAX_PLACE_SIZE*2,'center','#009999')
+defaultPlace['CHURCH']=(MAX_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#009999')
 defaultPlace['CATHEDRAL']=(MAX_PLACE_SIZE,MAX_PLACE_SIZE*3,'center','#009999')
 defaultPlace['SAWMILL']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'rural','#333300')#SEGHERIA
 defaultPlace['BAKERY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#FFCC00')
@@ -219,8 +219,7 @@ def createPlaceDefault(p,name):
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
         
     if(defaultPlace[name][2]=='rural'):
-        p1=Point(random.randint(int(p.x-int(CITY_SIZE_X/3)-MPS),int(p.x+int(CITY_SIZE_X/3)+MPS)),random.randint(int(p.y-int(CITY_SIZE_Y/3)-MPS),p.y+int(CITY_SIZE_Y/3)+MPS))
-        print("sono qui")   
+        p1=Point(random.randint(int(p.x-int(CITY_SIZE_X/3)-MPS),int(p.x+int(CITY_SIZE_X/3)+MPS)),random.randint(int(p.y-int(CITY_SIZE_Y/3)-MPS),p.y+int(CITY_SIZE_Y/3)+MPS))   
         if(random.randint(0,1)==0):
             p1.x=p1.x+int(CITY_SIZE_X/3)
         else:
@@ -333,6 +332,8 @@ homeNumberMax=int(INHABITANTS/(15-WEALTH))#dai 15 abitandi per casa di 49 mquadr
 homeNumberMin=int(INHABITANTS/(12-WEALTH))#dai 12 abitanti per casa di 49 mquadri <-> 2 abitanti per casa di 400 mquadri | 1000/6 => 166 house
 homeNumber=random.randint(homeNumberMax,homeNumberMin)
 
+print('This city needs '+str(homeNumber)+' house')  
+
 #homeNumber=5
 
 buildings=[]
@@ -340,7 +341,7 @@ buildings=[]
 nature=[]
 
 
-print('Genero le foreste')
+print('Building forest')
 if('WOOD' in RESOURCES):
     for i in range(0,15):
         element=createNatureFree(3,3)
@@ -362,7 +363,7 @@ if('WOOD' in RESOURCES):
                     if(place.overlaps(place2)):
                         place.move(random.randint(0,4),random.randint(20,30))   
 print('[10/10]')
-print('Genero i Fiumi')
+print('Building river')
 
 for p in range(0,RESOURCES.count('RIVERX')):
     rivert=[]
@@ -412,7 +413,7 @@ def contains(l, e):
             return True
     return False
     
-print('Genero gli edifici')
+print('Building the house')
 #CREAZIONE EDIFICI
 PLACESN=list(PLACES)
 PLACES2=list(PLACES)
@@ -427,10 +428,10 @@ for i in range(0,len(PLACESN)):
             buildings.append(place)
             PLACES2.remove(PLACESN[i])
         else:
-            print('non cancello il'+PLACESN[i])
+            print('I can\' delete '+PLACESN[i])
 PLACESN=PLACES2            
 
-print('genero case libere')
+print('Building free house')
 for i in range(0,homeNumber/20):
     place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
     buildings.append(place)
@@ -438,6 +439,72 @@ for i in range(0,homeNumber/20):
 old_town=homeNumber/100*20
 new_town=homeNumber/100*80
 
+print('Old city will have '+str(old_town)+' house') 
+def conflictSolver(field,buildings,area):
+    top=[]
+    left=[]
+    right=[]
+    bottom=[]
+    touch=False
+    while(not touch):   
+        touch=True  
+        for place in list(buildings):
+            for place2 in list(buildings):
+                if(not (id(place)==id(place2))):
+                    if(place.overlaps(place2)):
+                        if(place.name=='HOUSE'):
+                            place.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
+                            if(not area.overlaps(place)):
+                                tripla=random.randint(0,100)
+                                #print('mi spingo fuori '+str(tripla))
+                                if(place.top<area.top):
+                                    top.append(place)
+                                else:
+                                    if(place.left<area.left):
+                                        left.append(place)
+                                    else:
+                                        if(place.right>area.right):
+                                            right.append(place)
+                                        else:
+                                            if(place.bottom>area.bottom):
+                                                bottom.append(place)
+                                            else:
+                                                print('ommmioddio ho finito le dimensioni '+str(tripla))
+                                                print(str(place)+' '+str(tripla))
+                                                print(str(area)+' '+str(tripla))
+                                if(place in buildings):
+                                    buildings.remove(place)
+                            touch=False
+                            break
+                        else:
+                            place2.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
+                            if(not area.overlaps(place2)):
+                                tripla=random.randint(0,100)
+                                #print('mi spingo fuori '+str(tripla))
+                                if(place2.top<area.top):
+                                    top.append(place2)
+                                else:
+                                    if(place2.left<area.left):
+                                        left.append(place2)
+                                    else:
+                                        if(place2.right>area.right):
+                                            right.append(place2)
+                                        else:
+                                            if(place2.bottom>area.bottom):
+                                                bottom.append(place2)
+                                            else:
+                                                print('ommmioddio ho finito le dimensioni '+str(tripla))
+                                                print(str(place2)+' '+str(tripla))
+                                                print(str(area)+' '+str(tripla))
+                                if(place2 in buildings):
+                                    buildings.remove(place2)
+                            touch=False
+                            break
+    #print(field,buildings,top,left,right,bottom)
+    return (field,buildings,top,left,right,bottom)
+
+'''
+VECCHIO METODO FUNZIONANTE
 def generaPlace(buildings,homeNumber):
     print('genero case dipendenti')
     for i in range(5,homeNumber):
@@ -461,24 +528,139 @@ def generaPlace(buildings,homeNumber):
                             place2.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
                             #print('muovo una casa '+place2.name)
                             touch=False
-    return buildings
-    
-buildings.extend(generaPlace(buildings,old_town))
+    return buildings'''
 
+def generaPlace(buildings,homeNumber):
+    for i in range(0,homeNumber):
+        old_place=buildings[random.randint(0,len(buildings)-1)]
+        place=createPlace(old_place)
+        buildings.append(place)    
+    return buildings            
+
+def map_all_and_work(zone):
+    workers=[]
+    pool = Pool()
+    nw=Rect(Point(0,0),Point(CITY_SIZE_X/2,CITY_SIZE_Y/2))
+    ne=Rect(Point(CITY_SIZE_X/2,0),Point(CITY_SIZE_X,CITY_SIZE_Y/2))
+    sw=Rect(Point(0,CITY_SIZE_Y/2),Point(CITY_SIZE_X/2,CITY_SIZE_Y))
+    se=Rect(Point(CITY_SIZE_X/2,CITY_SIZE_Y/2),Point(CITY_SIZE_X,CITY_SIZE_Y))
+    #draw.rectangle(nw.get_list(), outline=DEFAULT_COLOR, fill='green' )
+    #draw.rectangle(ne.get_list(), outline=DEFAULT_COLOR, fill='yellow' )
+    #draw.rectangle(sw.get_list(), outline=DEFAULT_COLOR, fill='blue' )
+    #draw.rectangle(se.get_list(), outline=DEFAULT_COLOR, fill='orange' )
+    workers.append(pool.apply_async(conflictSolver,[(0,0),zone[0][0],nw]))
+    workers.append(pool.apply_async(conflictSolver,[(0,1),zone[0][1],ne]))         
+    workers.append(pool.apply_async(conflictSolver,[(1,0),zone[1][0],sw]))
+    workers.append(pool.apply_async(conflictSolver,[(1,1),zone[1][1],se])) 
+
+    pool.close()
+    pool.join()
+    zone=[[[],[]],[[],[]]] 
+    scambi=False 
+    bimbi_perduti=0
+    for w in workers:
+        res=w.get()
+        #print(res)
+        #print("index x:" +str(res[0][0]))
+        #print("index y:" +str(res[0][1]))
+        zone[res[0][0]][res[0][1]].extend(res[1])
+        XX=res[0][0]
+        YY=res[0][1]
+        if(YY-1>=0):#top
+            if(len(res[2])>0):
+                scambi=True
+            zone[XX][YY-1].extend(res[2])
+        else:
+            bimbi_perduti=bimbi_perduti+len(res[2])
+        if(XX-1>=0):#left
+            if(len(res[2])>0):
+                scambi=True
+            zone[XX-1][YY].extend(res[3])
+        else:
+            bimbi_perduti=bimbi_perduti+len(res[3])
+        if(XX+1<=1):#right
+            if(len(res[2])>0):
+                scambi=True
+            zone[XX+1][YY].extend(res[4])
+        else:
+            bimbi_perduti=bimbi_perduti+len(res[4])
+        if(YY+1<=1):#bottom
+            if(len(res[2])>0):
+                scambi=True
+            zone[XX][YY+1].extend(res[5])
+        else:
+            bimbi_perduti=bimbi_perduti+len(res[5])
+
+    #print('abbiamo perso n '+str(bimbi_perduti))
+    return (zone,scambi)
+
+def not_less_bounds(number,lower,upper):
+    if(number<lower):
+        return lower
+    if(number>upper):
+        return upper
+    return number
+
+def mappa_zone(buildings):
+    zone=[[[],[]],[[],[]]]    
+    for place in buildings:
+            zone[not_less_bounds(int(place.left/(CITY_SIZE_X/2)),0,1)][not_less_bounds(int(place.top/(CITY_SIZE_Y/2)),0,1)].append(place)    
+
+
+    scambi=True
+    while scambi:
+        #print('Faccio iterazione')
+        res=map_all_and_work(zone)
+        zone=res[0]
+        scambi=res[1]
+
+    buildings=[]
+    for row in zone:
+        for col in row:
+            buildings.extend(col)
+    return buildings
+
+buildings=generaPlace(buildings,old_town)     
+
+buildings=mappa_zone(buildings)
+
+print('Old city has '+str(len(buildings))+' instead of '+str(old_town)) 
 perim=()
 if( 'WALL' in RESOURCES ):
     perim= perimetralWall(buildings)
 
 
 #CREAZIONE EDIFICI RURALI
+
 for i in range(0,len(PLACESN)):
     #place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
     #if(defaultPlace[PLACES[i]][2]=='rural') or (defaultPlace[PLACES[i]][2]=='free'):
     place=createPlaceDefault(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)),PLACESN[i])
     place.set_name(PLACESN[i])
     buildings.append(place)
-        
-buildings.extend(generaPlace(buildings,new_town))   
+    
+
+buildings=generaPlace(buildings,new_town)
+buildings=mappa_zone(buildings)
+
+for place in list(buildings):
+    for place2 in list(buildings):
+        if(not (id(place)==id(place2))):
+            if(place.overlaps(place2)):
+                if(place.name=='HOUSE'):
+                    if(place in buildings):
+                        buildings.remove(place)    
+                else:
+                    if(not place2.name=='HOUSE'):
+                        r=random.randint(0,1)
+                        if(r==0):
+                            place.move(0,place.right-place.left+place2.right-place2.left)
+                        if(r==1):
+                            place.move(1,place.bottom-place.top+place2.bottom-place2.top)
+                            
+print('The city have '+str(len(buildings))+' instead of '+str(homeNumber)+' suggested inhabitants '+str(len(buildings)*(14-WEALTH)))
+
+ 
 
 print('Controllo conflitti natura')
 for place in list(buildings):
@@ -536,6 +718,9 @@ TEXT=str(METER_PIXEL_RATIO*LUNGHEZZA_CAMPIONE)+' m'
 draw.text((CITY_SIZE_X-LUNGHEZZA_CAMPIONE+LUNGHEZZA_CAMPIONE/3,CITY_SIZE_Y-10-(FONT_SIZE)),TEXT,fill="red",font=font)
 
 draw.text((10,10),"City of "+CITY_NAME,fill="red",font=font)
+
+#draw.line((CITY_SIZE_X/2,0,CITY_SIZE_X/2,CITY_SIZE_Y),width=1,fill='red');
+#draw.line((0,CITY_SIZE_Y/2,CITY_SIZE_X,CITY_SIZE_Y/2),width=1,fill='red');
 
 img.show()
 
