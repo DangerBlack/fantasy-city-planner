@@ -2,6 +2,9 @@
 A tool for creating random city in a middle age fantasy world
 
 
+![alt text](https://raw.githubusercontent.com/DangerBlack/fantasy-city-planner/master/map/mappa_5.png "An example of what can be done with fcp")
+
+
 #Usage
 
 Edit this settings in order to custom your city
