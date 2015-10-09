@@ -25,7 +25,7 @@ from rect import Rect
 from hull import *
 from multiprocessing import Pool
 from functools import partial
-import glob, os
+import os
 import pickle
 
 FONT_SIZE=20
@@ -848,11 +848,9 @@ print("Fantasy City Planner has finish to create city of "+CITY_NAME)
 
 #SALVA MAPPA
 mas=0
-for infile in glob.glob("map/*.png"):
-    if infile.endswith(str(mas)+".png"):
+while(os.path.isfile('map/mappa_'+str(mas)+'.png')==True):
         mas=mas+1
 
-mas=mas+1
 filename='map/mappa_'+str(mas)
 img.save(filename+'.png')
 
