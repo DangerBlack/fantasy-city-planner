@@ -8,6 +8,8 @@ from rect import Rect
 from hull import *
 from multiprocessing import Pool
 from functools import partial
+import glob, os
+import pickle
 
 FONT_SIZE=20
 
@@ -51,10 +53,6 @@ WOOD_SPREADING=3
 
 #FINE CONFIGURAZIONE INIZIALE
 
-img = Image.new( 'RGB', (CITY_SIZE_X,CITY_SIZE_Y), "#C8C8C8") # create a new black image
-pixels = img.load() # create the pixel map        
-draw = ImageDraw.Draw(img)
-
 defaultPlace={}
 
 
@@ -90,9 +88,14 @@ defaultPlace['GUILD_OF_IRONMONGER']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#5
 defaultPlace['THEATRE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#0066CC')
 defaultPlace['ARENA']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#CC0000')
 defaultPlace['OBSERVATORY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'rural','#0000CC')
-defaultPlace['unknown']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'center','#000066')
+defaultPlace['unknown']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#000066')
 
-
+def getDefaultPlace(name):
+    res=defaultPlace['unknown']
+    if name in defaultPlace.keys():
+        res=defaultPlace[name]
+    return res
+    
 defaultResurce={}
 defaultResurce['WOOD']=('green','removable')
 defaultResurce['RIVER']=('#00CCFF','fixed')
@@ -207,7 +210,39 @@ if((INHABITANTS>3000)and(not 'CASTLE' in PLACES)):
 if((INHABITANTS>3000)and(not 'MARKET' in PLACES)):
     print('inconsistency VERY HIGH INHABITANTS but not MARKET')
     PLACES.append('MARKET')
+
+
+if((INHABITANTS>3000)and(PLACES.count('BAKERY')<(INHABITANTS/2000))):
+    print('inconsistency VERY HIGH INHABITANTS but too FEW BAKERY')
+    for i in range(0,int((INHABITANTS/2000)-PLACES.count('BAKERY'))):
+        PLACES.append('BAKERY')
+
+if((INHABITANTS>3000)and(PLACES.count('BUTCHER_SHOP')<(INHABITANTS/2000))):
+    print('inconsistency VERY HIGH INHABITANTS but too FEW BUTCHER_SHOP')
+    for i in range(0,int((INHABITANTS/3000)-PLACES.count('BUTCHER_SHOP'))):
+        PLACES.append('BUTCHER_SHOP')
     
+    
+    
+#now some other paramethers from   http://www222.pair.com/sjohn/blueroom/demog.htm
+
+'''
+OTHER_PLACE=(
+('SHOEMAKERS',150), ('FURRIERS',250), ('MAIDSERVANTS',250), ('TAILOR_SHOP',250), ('BARBER_SHOP',350), ('JEWELRY',400), ('TAVERN',400), ('OLD-CLOTHES',400), ('PASTRYCOOKS',500), ('MASONS',500), ('CARPENTERY',550), ('WEAVERS',600), ('CHANDLERS',700), ('MERCERS',700), ('COOPERS',700), ('BAKERY',800), ('WATERCARRIERS',850), ('SCABBARDMAKERS',850), ('WINE-SELLERS',900), ('HEADGEAR',950), ('SADDLERY',1000), ('CHICKEN_BUTCHER_SHOP',1000), ('PURSE_SHOP',1100), ('WOODSELLERS',2400), ('MAGIC_SHOPS',2800), ('BOOKBINDERS_SHOP',3000), ('BUTCHER_SHOP',1200), ('FISHMONGER',1200), ('BEER_SHOP',1400), ('BUCKLE_MAKER_SHOP',1400), ('PLASTERER',1400), ('SPICE_SHOP',1400), ('SMITHY',1500), ('PAINTERS',1500), ('DOCTOR',1700), ('ROOFER',1800), ('LOCKSMITH',1900), ('BATHER',1900), ('ROPEMAKER',1900), ('INN',2000), ('TANNER_SHOP',2000), ('COPYIST',2000), ('SCULPTOR',2000), ('RUGMAKER',2000), ('HARNESS_MAKERS',2000), ('BLEACHER_SHOP',2100), ('HAY_MERCHANT',2300), ('CUTLER',2300), ('GLOVEMAKER_SHOP',2400), ('WOODCARVER_SHOP',2400), ('BOOK_SHOP',6300), ('ILLUMINATOR',3900)
+)
+'''
+OTHER_PLACE=(
+ ('TAILOR_SHOP',800), ('JEWELRY',2000), ('TAVERN',400), ('BAKERY',800), ('SADDLERY',1000), ('CHICKEN_BUTCHER_SHOP',1000), ('MAGIC_SHOPS',2800), 
+ ('BOOKBINDERS_SHOP',3000), ('BUTCHER_SHOP',1200), ('FISHMONGER',1200), ('BEER_SHOP',1400), ('SPICE_SHOP',1400), ('SMITHY',1500), ('DOCTOR',1700), 
+ ('INN',2000), ('TANNER_SHOP',2000), ('COPYIST',2000), ('SCULPTOR',2000), ('BOOK_SHOP',6300)
+)
+
+for other in OTHER_PLACE:
+    if(PLACES.count(other[0])<INHABITANTS/other[1]):
+        for i in range(0,int((INHABITANTS/other[1])-PLACES.count(other[0]))):
+            PLACES.append(other[0])
+
+  
 #end consistency checker
 
 def createPlaceFree():
@@ -330,7 +365,8 @@ def createPolygonFromRect(r,ndot):
 def perimetralWall(house_pure):
     points=[]
     for h in house_pure:
-        if(h.name=='HOUSE') or (not defaultPlace[h.name][2]=='rural') or (not defaultPlace[h.name][2]=='free'):
+        info=getDefaultPlace(h.name)
+        if(h.name=='HOUSE') or (not info[2]=='rural') or (not info[2]=='free'):
             dx=h.right-h.left
             dy=h.bottom-h.top
             x=h.left-dx
@@ -436,7 +472,9 @@ PLACESN=list(PLACES)
 PLACES2=list(PLACES)
 for i in range(0,len(PLACESN)):
     #place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
-    if(not ((defaultPlace[PLACESN[i]][2]=='rural') or (defaultPlace[PLACESN[i]][2]=='free'))):
+    info=getDefaultPlace(PLACESN[i])
+    
+    if(not (info[2]=='rural') or (info[2]=='free')):
         #se no e gia tra gli edifici aggiungilo e rimuovlo
         #se non e tra gli edifici saltalo
         if(not contains(buildings, PLACESN[i])):        
@@ -445,11 +483,11 @@ for i in range(0,len(PLACESN)):
             buildings.append(place)
             PLACES2.remove(PLACESN[i])
         else:
-            print('I can\' delete '+PLACESN[i])
+            pass
 PLACESN=PLACES2            
 
 print('Building free house')
-for i in range(0,homeNumber/20):
+for i in range(0,(homeNumber/20)-len(buildings)):
     place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
     buildings.append(place)
 
@@ -542,35 +580,7 @@ def conflictSolver(field,buildings,area,duty):
                                     buildings.remove(place2)
                             touch=False
                             break
-    #print(field,buildings,top,left,right,bottom)
     return (field,buildings,top,left,right,bottom)
-
-'''
-VECCHIO METODO FUNZIONANTE
-def generaPlace(buildings,homeNumber):
-    print('genero case dipendenti')
-    for i in range(5,homeNumber):
-        old_place=buildings[random.randint(0,len(buildings)-1)]
-        place=createPlace(old_place)
-        buildings.append(place)
-
-    print('Controllo conflitti edifici')
-    touch=False
-    while(not touch):   
-        touch=True
-        for place in buildings:     
-            for place2 in buildings:
-                if(not (id(place)==id(place2))):
-                    if(place.overlaps(place2)):
-                        if(place.name=='HOUSE'):
-                            place.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
-                            #print('muovo una casa '+place.name)
-                            touch=False
-                        else:
-                            place2.move(random.randint(0,4),random.randint(0,MAX_PLACE_SIZE))
-                            #print('muovo una casa '+place2.name)
-                            touch=False
-    return buildings'''
 
 def generaPlace(buildings,homeNumber):
     for i in range(0,homeNumber):
@@ -586,10 +596,6 @@ def map_all_and_work(zone,duty):
     ne=Rect(Point(CITY_SIZE_X/2,0),Point(CITY_SIZE_X,CITY_SIZE_Y/2))
     sw=Rect(Point(0,CITY_SIZE_Y/2),Point(CITY_SIZE_X/2,CITY_SIZE_Y))
     se=Rect(Point(CITY_SIZE_X/2,CITY_SIZE_Y/2),Point(CITY_SIZE_X,CITY_SIZE_Y))
-    #draw.rectangle(nw.get_list(), outline=DEFAULT_COLOR, fill='green' )
-    #draw.rectangle(ne.get_list(), outline=DEFAULT_COLOR, fill='yellow' )
-    #draw.rectangle(sw.get_list(), outline=DEFAULT_COLOR, fill='blue' )
-    #draw.rectangle(se.get_list(), outline=DEFAULT_COLOR, fill='orange' )
     workers.append(pool.apply_async(conflictSolver,[(0,0),zone[0][0],nw,duty]))
     workers.append(pool.apply_async(conflictSolver,[(0,1),zone[0][1],ne,duty]))         
     workers.append(pool.apply_async(conflictSolver,[(1,0),zone[1][0],sw,duty]))
@@ -708,6 +714,22 @@ for i in range(0,len(PLACESN)):
 buildings=generaPlace(buildings,new_town)
 buildings=mappa_zone(buildings)
 
+print('Controllo conflitti natura')
+for place in list(buildings):
+        for n in list(nature):
+            if(place.overlaps(n)):
+                if(defaultResurce[n.name][1]=='removable'):
+                    nature.remove(n)
+                else:
+                    if(place.name=='HOUSE'):
+                        try:
+                            buildings.remove(place)
+                        except ValueError as e:
+                            pass
+                    else:
+                        print('muovo a nord '+place.name+' di : '+str(n.top-place.top))
+                        place.move(1,n.top-place.top)  
+
 for place in list(buildings):
     for place2 in list(buildings):
         if(not (id(place)==id(place2))):
@@ -725,21 +747,31 @@ for place in list(buildings):
                             
 print('The city have '+str(len(buildings))+' instead of '+str(homeNumber)+' suggested inhabitants '+str(len(buildings)*(14-WEALTH)))
 
- 
 
-print('Controllo conflitti natura')
-for place in list(buildings):
-        for n in list(nature):
-            if(place.overlaps(n)):
-                if(defaultResurce[n.name][1]=='removable'):
-                    nature.remove(n)
-                else:
-                    if(place.name=='HOUSE'):
-                        try:
-                            buildings.remove(place)
-                        except ValueError as e:
-                            x=5
+
 #FINE CREAZIONE EDIFICI
+
+#INIZIO STAMPA
+
+LIGHT_PLACES=list(set(PLACES))
+LIGHT_PLACES=sorted(LIGHT_PLACES)
+print(LIGHT_PLACES)
+print(len(LIGHT_PLACES))
+WIDTH_LEGEND=len(LIGHT_PLACES)*FONT_SIZE/CITY_SIZE_Y+1;
+print('servirebbero +'+str(WIDTH_LEGEND)+' COLONNE')
+
+#GENERA DIMENSIONE TESTO LEGENDA SU MAPPA
+maxsize=1
+for i in range(0,len(PLACES)):
+    if(font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]>maxsize):
+        maxsize=font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]
+maxsize=maxsize+30
+
+CITY_SIZE_X_TRUE=CITY_SIZE_X+maxsize*WIDTH_LEGEND
+
+img = Image.new( 'RGB', (CITY_SIZE_X_TRUE,CITY_SIZE_Y), "#C8C8C8") # create a new black image
+pixels = img.load() # create the pixel map        
+draw = ImageDraw.Draw(img)
 
 
 #STAMPA NATURA                      
@@ -756,25 +788,29 @@ draw.line(perim,width=2,fill='#1A1A1A');
 for place in buildings:
     color=DEFAULT_COLOR;
     if(not place.name=='HOUSE'):
-        color=defaultPlace[place.name][3]
+        info=getDefaultPlace(place.name)
+        color=info[3]
         draw.rectangle(place.get_list(), outline=DEFAULT_COLOR, fill=color )
         draw.text((place.top_left().x+5,place.top_left().y),place.name[0:1],fill="red",font=font)
     else:
         draw.rectangle(place.get_list(), outline=color)
 
-#GENERA DIMENSIONE TESTO LEGENDA SU MAPPA
-maxsize=1
-for i in range(0,len(PLACES)):
-    if(font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]>maxsize):
-        maxsize=font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]
+
         
 #STAMPA LEGENDA
-maxsize=maxsize+30
-draw.rectangle((CITY_SIZE_X-maxsize-5,45,CITY_SIZE_X-5,50+len(PLACES)*(FONT_SIZE+1)), fill='white' )
-draw.rectangle((CITY_SIZE_X-maxsize-5,45,CITY_SIZE_X-5,50+len(PLACES)*(FONT_SIZE+1)), outline='black' )
-for i in range(0,len(PLACES)):
-    draw.rectangle((CITY_SIZE_X-maxsize,50+i*(FONT_SIZE)+1,CITY_SIZE_X-maxsize+5,50+i*(FONT_SIZE)+FONT_SIZE-2),fill=defaultPlace[PLACES[i]][3])
-    draw.text((CITY_SIZE_X-maxsize+10,50+i*(FONT_SIZE)),PLACES[i][0:1]+": "+PLACES[i].lower().title(),fill="red",font=font)
+draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), fill='white' )
+draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), outline='black' )
+
+LEFT=WIDTH_LEGEND
+TOP=0
+for i in range(0,len(LIGHT_PLACES)):
+    if((TOP*(FONT_SIZE+1)+10)>CITY_SIZE_Y):
+        TOP=0
+        LEFT=LEFT-1
+    info=getDefaultPlace(LIGHT_PLACES[i])
+    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*LEFT+5,10+TOP*(FONT_SIZE)+1,CITY_SIZE_X_TRUE-maxsize*LEFT+10,10+TOP*(FONT_SIZE)+FONT_SIZE-2),fill=info[3])
+    draw.text((CITY_SIZE_X_TRUE-maxsize*LEFT+15,10+TOP*(FONT_SIZE)),LIGHT_PLACES[i][0:1]+": "+LIGHT_PLACES[i].lower().title(),fill="red",font=font)
+    TOP=TOP+1
 
     
 LUNGHEZZA_CAMPIONE=200
@@ -791,4 +827,21 @@ img.show()
 
 
 print("Fantasy City Planner has finish to create city of "+CITY_NAME)
+
+
+#SALVA MAPPA
+mas=0
+for infile in glob.glob("map/*.png"):
+    if infile.endswith(str(mas)+".png"):
+        mas=mas+1
+
+filename='map/mappa_'+str(mas)
+img.save(filename+'.png')
+
+obj=((CITY_SIZE_X,CITY_SIZE_Y),RESOURCES,PLACES,buildings,nature)
+f = open(filename+'.map', "w")
+pickle.dump(obj, f)
+
+ 
+
 #im.save(sys.stdout, "PNG")
