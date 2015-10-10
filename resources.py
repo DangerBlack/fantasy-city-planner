@@ -1,9 +1,9 @@
 # resources.py
 # This file is part of Fantasy City Planner.
 # See fcp.py for license information
-#
 
-def resource_consistency_check(PLACES,RESOURCES):
+
+def resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS):
 
     if(('WOOD' in RESOURCES)and(not 'SAWMILL' in PLACES)):
         print('inconsistency WOOD but not SAWMILL')

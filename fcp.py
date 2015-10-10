@@ -24,6 +24,7 @@ from random import randrange
 from rect import Point
 from rect import Rect
 from hull import *
+from resources import *
 from multiprocessing import Pool
 from functools import partial
 import os
@@ -123,7 +124,8 @@ defaultResurce['CAVE']=('#323232','fixed')
 
 
 #deduct from resources and find inconsistency!
-resource_consistency_check(PLACES,RESOURCES)
+resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS)
+
 #end consistency checker
 
 
