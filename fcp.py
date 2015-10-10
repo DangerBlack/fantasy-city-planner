@@ -11,10 +11,10 @@
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with Fantasy City Planner.  If not, see <http://www.gnu.org/licenses/>.
-    
+
     @author DangerBlack
     @version 1.0
-   
+
 '''
 from PIL import Image
 from PIL import ImageDraw
@@ -75,7 +75,7 @@ WOOD_SPREADING=3
 defaultPlace={}
 
 
-# center, urban, free, rural, 
+# center, urban, free, rural,
 defaultPlace['CASTLE']=((MIN_PLACE_SIZE*WEALTH/2),(MAX_PLACE_SIZE*WEALTH)/2,'center','#85DADA')
 defaultPlace['MARKET']=(30,20*WEALTH,'center','#FFCC99')
 defaultPlace['PARK']=(30,35*WEALTH,'urban','#2EB82E')
@@ -142,27 +142,28 @@ def createPlaceFree():
     place=Rect(p1,p2)
     return place
 
+
 def createPlaceDefault(p,name):
-    
+
     if not name in list(defaultPlace.keys()):
         name='unknown'
-        
+
     MPS=defaultPlace[name][1]
     mps=defaultPlace[name][0]
     if(defaultPlace[name][2]=='free'):
         p1=Point(random.randint(0,CITY_SIZE_X),random.randint(0,CITY_SIZE_Y))
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
-        
+
     if(defaultPlace[name][2]=='center'):
         p1=Point(random.randint(p.x-MPS,p.x+MPS),random.randint(p.y-MPS,p.y+MPS))
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
-        
+
     if(defaultPlace[name][2]=='urban'):
         p1=Point(random.randint(int(p.x-int(CITY_SIZE_X/3)-MPS),int(p.x+int(CITY_SIZE_X/3)+MPS)),random.randint(int(p.y-int(CITY_SIZE_Y/3)-MPS),p.y+int(CITY_SIZE_Y/3)+MPS))
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
-        
+
     if(defaultPlace[name][2]=='rural'):
-        p1=Point(random.randint(int(p.x-int(CITY_SIZE_X/3)-MPS),int(p.x+int(CITY_SIZE_X/3)+MPS)),random.randint(int(p.y-int(CITY_SIZE_Y/3)-MPS),p.y+int(CITY_SIZE_Y/3)+MPS))   
+        p1=Point(random.randint(int(p.x-int(CITY_SIZE_X/3)-MPS),int(p.x+int(CITY_SIZE_X/3)+MPS)),random.randint(int(p.y-int(CITY_SIZE_Y/3)-MPS),p.y+int(CITY_SIZE_Y/3)+MPS))
         if(random.randint(0,1)==0):
             p1.x=p1.x+int(CITY_SIZE_X/3)
         else:
@@ -172,42 +173,46 @@ def createPlaceDefault(p,name):
         else:
             p1.y=p1.y-int(CITY_SIZE_Y/3)
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
-        
+
     place=Rect(p1,p2)
     return place
+
 
 def createPlacePoint(p):
     p1=Point(random.randint(p.x-MAX_PLACE_SIZE*WEALTH,p.x+MAX_PLACE_SIZE*WEALTH),random.randint(p.y-MAX_PLACE_SIZE*WEALTH,p.y+MAX_PLACE_SIZE*WEALTH))
     p2=Point(random.randint(p1.x+MIN_PLACE_SIZE,p1.x+MAX_PLACE_SIZE),   random.randint(p1.y+MIN_PLACE_SIZE,p1.y+MAX_PLACE_SIZE))
     place=Rect(p1,p2)
     return place
-    
+
+
 def createPlace(old_place):
     p1=Point(random.randint(old_place.top_left().x-MAX_PLACE_SIZE,old_place.top_left().x+MAX_PLACE_SIZE),   random.randint(old_place.top_left().y-MAX_PLACE_SIZE,old_place.top_left().y+MAX_PLACE_SIZE))
     p2=Point(random.randint(p1.x+MIN_PLACE_SIZE,p1.x+MAX_PLACE_SIZE),   random.randint(p1.y+MIN_PLACE_SIZE,p1.y+MAX_PLACE_SIZE))
     place=Rect(p1,p2)
     return place
-    
+
+
 def createNatureFree(dx,dy):
     p1=Point(random.randint(0,CITY_SIZE_X), random.randint(0,CITY_SIZE_Y))
     p2=Point(p1.x+dx,p1.y+dy)
     place=Rect(p1,p2)
     return place
 
+
 def createNature(old_place,sx,sy,dx,dy):
     p1=Point(random.randint(old_place.top_left().x-sx-dx,old_place.top_left().x+sx+dx), random.randint(old_place.top_left().y-sy-dy,old_place.top_left().y+sy+dy))
     p2=Point(p1.x+dx,p1.y+dy)
     place=Rect(p1,p2)
     return place
-    
-    
+
+
 def createPolygonFromRect(r,ndot):
     upper=[]
     downer=[]
     lefter=[]
     righter=[]
     for x in range(r.left,r.right,5):
-        upper.append([x,r.top])     
+        upper.append([x,r.top])
     for x in range(r.right,r.left,-5):
         downer.append([x,r.bottom])
     for y in range(r.bottom,r.top,-5):
@@ -220,27 +225,27 @@ def createPolygonFromRect(r,ndot):
         if(ptop<r.top):
             ptop=r.top
         u[1]=ptop
-    
+
     pbot=r.bottom
     for u in downer:
         pbot=pbot+random.randint(-2,2)
         if(pbot>r.bottom):
             pbot=r.bottom
         u[1]=pbot
-    
+
     pleft=r.left
     for u in lefter:
         pleft=pleft+random.randint(-2,2)
         if(pleft<r.left):
             pleft=r.left
         u[0]=pleft
-        
+
     pright=r.right
     for u in righter:
         pright=pright+random.randint(-2,2)
         if(pright>r.right):
             pright=r.right
-        u[0]=pright     
+        u[0]=pright
     polygon=[]
     for u in upper:
         polygon.append((u[0],u[1]))
@@ -251,7 +256,7 @@ def createPolygonFromRect(r,ndot):
     for u in lefter:
         polygon.append((u[0],u[1]))
     return polygon
-    
+
 
 def perimetralWall(house_pure):
     points=[]
@@ -405,20 +410,24 @@ def deduce_direction(field,duty):
         direction.remove(0)
         direction.remove(1)
     return direction
+
+
 def get_direction(field,duty):
     direction=[0,1,2,3]
     if(duty>0.1) and (duty*random.random()>0.5):
             direction=deduce_direction(field,duty)
     return direction[random.randint(0,len(direction)-1)]
-#THIS METHOD IS DONE PARARREL DUE TO THE HUGE AMOUNT OF WORK!
+
+
+#THIS METHOD IS DONE PARALLEL DUE TO THE HUGE AMOUNT OF WORK!
 def conflictSolver(field,buildings,area,duty):
     top=[]
     left=[]
     right=[]
     bottom=[]
     touch=False
-    while(not touch):   
-        touch=True  
+    while(not touch):
+        touch=True
         for place in list(buildings):
             for place2 in list(buildings):
                 if(not (id(place)==id(place2))):
@@ -473,12 +482,14 @@ def conflictSolver(field,buildings,area,duty):
                             break
     return (field,buildings,top,left,right,bottom)
 
+
 def generaPlace(buildings,homeNumber):
     for i in range(0,int(homeNumber)):
         old_place=buildings[random.randint(0,len(buildings)-1)]
         place=createPlace(old_place)
-        buildings.append(place)    
-    return buildings            
+        buildings.append(place)
+    return buildings
+
 
 def map_all_and_work(zone,duty):
     workers=[]
@@ -488,14 +499,14 @@ def map_all_and_work(zone,duty):
     sw=Rect(Point(0,CITY_SIZE_Y/2),Point(CITY_SIZE_X/2,CITY_SIZE_Y))
     se=Rect(Point(CITY_SIZE_X/2,CITY_SIZE_Y/2),Point(CITY_SIZE_X,CITY_SIZE_Y))
     workers.append(pool.apply_async(conflictSolver,[(0,0),zone[0][0],nw,duty]))
-    workers.append(pool.apply_async(conflictSolver,[(0,1),zone[0][1],ne,duty]))         
+    workers.append(pool.apply_async(conflictSolver,[(0,1),zone[0][1],ne,duty]))
     workers.append(pool.apply_async(conflictSolver,[(1,0),zone[1][0],sw,duty]))
-    workers.append(pool.apply_async(conflictSolver,[(1,1),zone[1][1],se,duty])) 
+    workers.append(pool.apply_async(conflictSolver,[(1,1),zone[1][1],se,duty]))
 
     pool.close()
     pool.join()
-    zone=[[[],[]],[[],[]]] 
-    scambi=False 
+    zone=[[[],[]],[[],[]]]
+    scambi=False
     bimbi_perduti=0
     for w in workers:
         res=w.get()
@@ -533,6 +544,7 @@ def map_all_and_work(zone,duty):
     #print('abbiamo perso n '+str(bimbi_perduti))
     return (zone,scambi)
 
+
 def not_less_bounds(number,lower,upper):
     if(number<lower):
         return lower
@@ -558,13 +570,15 @@ def test_temp(yy,xx,place):
     if(xx==1)and(yy==1):
         if(not se.overlaps(place)):
             print('errore micidiale 4');
+
+
 def mappa_zone(buildings):
-    zone=[[[],[]],[[],[]]]    
+    zone=[[[],[]],[[],[]]]
     for place in buildings:
             yy=not_less_bounds(int(place.top/(CITY_SIZE_Y/2)),0,1)
             xx=not_less_bounds(int(place.left/(CITY_SIZE_X/2)),0,1)
             test_temp(xx,yy,place)
-            zone[yy][xx].append(place)    
+            zone[yy][xx].append(place)
 
 
     scambi=True
@@ -601,25 +615,25 @@ for i in range(0,len(PLACESN)):
     place=createPlaceDefault(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)),PLACESN[i])
     place.set_name(PLACESN[i])
     buildings.append(place)
-    
+
 buildings=generaPlace(buildings,new_town)
 buildings=mappa_zone(buildings)
 
 print('Controllo conflitti natura')
 for place in list(buildings):
-        for n in list(nature):
-            if(place.overlaps(n)):
-                if(defaultResurce[n.name][1]=='removable'):
-                    nature.remove(n)
+    for n in list(nature):
+        if(place.overlaps(n)):
+            if(defaultResurce[n.name][1]=='removable'):
+                nature.remove(n)
+            else:
+                if(place.name=='HOUSE'):
+                    try:
+                        buildings.remove(place)
+                    except ValueError as e:
+                        pass
                 else:
-                    if(place.name=='HOUSE'):
-                        try:
-                            buildings.remove(place)
-                        except ValueError as e:
-                            pass
-                    else:
-                        print('muovo a nord '+place.name+' di : '+str(n.top-place.top))
-                        place.move(1,n.top-place.top)  
+                    print('muovo a nord '+place.name+' di : '+str(n.top-place.top))
+                    place.move(1,n.top-place.top)
 
 for place in list(buildings):
     for place2 in list(buildings):
@@ -627,7 +641,7 @@ for place in list(buildings):
             if(place.overlaps(place2)):
                 if(place.name=='HOUSE'):
                     if(place in buildings):
-                        buildings.remove(place)    
+                        buildings.remove(place)
                 else:
                     if(not place2.name=='HOUSE'):
                         r=random.randint(0,1)
@@ -635,8 +649,8 @@ for place in list(buildings):
                             place.move(0,place.right-place.left+place2.right-place2.left)
                         if(r==1):
                             place.move(1,place.bottom-place.top+place2.bottom-place2.top)
-                            
-print('The city have '+str(len(buildings))+' instead of '+str(homeNumber)+' suggested inhabitants '+str(len(buildings)*(14-WEALTH)))
+
+print('The city has '+str(len(buildings))+' instead of '+str(homeNumber)+' suggested inhabitants '+str(len(buildings)*(14-WEALTH)))
 
 
 
@@ -661,21 +675,21 @@ maxsize=maxsize+30
 CITY_SIZE_X_TRUE=CITY_SIZE_X+maxsize*WIDTH_LEGEND
 
 img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(CITY_SIZE_Y)), "#C8C8C8") # create a new black image
-pixels = img.load() # create the pixel map        
+pixels = img.load() # create the pixel map
 draw = ImageDraw.Draw(img)
 
 
-#STAMPA NATURA                      
+#STAMPA NATURA
 for n in nature:
     if(not n.name=='CAVE'):
         draw.rectangle(n.get_list(), fill=defaultResurce[n.name][0])
     else:
         draw.polygon(createPolygonFromRect(n,5), fill=defaultResurce[n.name][0])
-                
-#STAMPA CINTA MURARIA
-draw.line(perim,width=2,fill='#1A1A1A');                
 
-#STAMPA EDIFICI     
+#STAMPA CINTA MURARIA
+draw.line(perim,width=2,fill='#1A1A1A');
+
+#STAMPA EDIFICI
 for place in buildings:
     color=DEFAULT_COLOR;
     if(not place.name=='HOUSE'):
@@ -687,7 +701,7 @@ for place in buildings:
         draw.rectangle(place.get_list(), outline=color)
 
 
-        
+
 #STAMPA LEGENDA
 draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), fill='white' )
 draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), outline='black' )
@@ -703,7 +717,7 @@ for i in range(0,len(LIGHT_PLACES)):
     draw.text((CITY_SIZE_X_TRUE-maxsize*LEFT+15,10+TOP*(FONT_SIZE)),LIGHT_PLACES[i][0:1]+": "+LIGHT_PLACES[i].lower().title(),fill="red",font=font)
     TOP=TOP+1
 
-    
+
 LUNGHEZZA_CAMPIONE=200
 draw.line((CITY_SIZE_X-5-LUNGHEZZA_CAMPIONE,CITY_SIZE_Y-10,CITY_SIZE_X-5,CITY_SIZE_Y-10),width=2,fill='red');
 TEXT=str(METER_PIXEL_RATIO*LUNGHEZZA_CAMPIONE)+' m'
@@ -723,7 +737,7 @@ print("Fantasy City Planner has finish to create city of "+CITY_NAME)
 #SALVA MAPPA
 mas=0
 while(os.path.isfile('map/mappa_'+str(mas)+'.png')==True):
-        mas=mas+1
+    mas=mas+1
 
 filename='map/mappa_'+str(mas)
 img.save(filename+'.png')
@@ -732,6 +746,6 @@ obj=((CITY_SIZE_X,CITY_SIZE_Y),RESOURCES,PLACES,buildings,nature)
 f = open(filename+'.map', "wb")
 pickle.dump(obj, f)
 
- 
+
 
 #im.save(sys.stdout, "PNG")
