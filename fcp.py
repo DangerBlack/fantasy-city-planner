@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
     This file is part of Fantasy City Planner.
     Fantasy City Planner is free software: you can redistribute it and/or modify
@@ -15,9 +16,9 @@
     @version 1.0
    
 '''
-import Image
-import ImageDraw
-import ImageFont
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 import random
 from random import randrange
 from rect import Point
@@ -41,8 +42,8 @@ KIND_OF_RESOURCES=('WOOD','FISH','LEATHER','PIG','HORSE','CAVE','SILK','WOOL')
 METER_PIXEL_RATIO=0.5
 
 CITY_NAME="Carcosa"
-CITY_SIZE_X=800
-CITY_SIZE_Y=600
+CITY_SIZE_X=300
+CITY_SIZE_Y=300
 
 #london dc => 15'000 inhabitants  530m*530m
 
@@ -53,7 +54,7 @@ CITY_SIZE_Y=600
 SUGGESTED_INHABITANTS_BY_LONDON=((CITY_SIZE_X*METER_PIXEL_RATIO)*(CITY_SIZE_Y*METER_PIXEL_RATIO))*80000/1500000;
 print("Suggested inhabitants: "+str(SUGGESTED_INHABITANTS_BY_LONDON))
 
-INHABITANTS=6400
+INHABITANTS=640
 RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL','CAVE']
 WEALTH=6 #1-10
 PLACES=['CASTLE','SANCTUARY','CHURCH']
@@ -109,7 +110,7 @@ defaultPlace['unknown']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#000066')
 
 def getDefaultPlace(name):
     res=defaultPlace['unknown']
-    if name in defaultPlace.keys():
+    if name in list(defaultPlace.keys()):
         res=defaultPlace[name]
     return res
     
@@ -184,7 +185,7 @@ if((WEALTH>7)and(not 'WALL' in PLACES)):
 
 if((WEALTH>3)and(PLACES.count('INN')<WEALTH/2)):
     print('inconsistency FEW INN despite GOOD WEALTH')
-    for i in range(0,WEALTH/2-PLACES.count('INN')):
+    for i in range(0,int(WEALTH/2-PLACES.count('INN'))):
         PLACES.append('INN')
 
 if((WEALTH>3)and(PLACES.count('CHURCH')<WEALTH)):
@@ -270,7 +271,7 @@ def createPlaceFree():
 
 def createPlaceDefault(p,name):
     
-    if not name in defaultPlace.keys():
+    if not name in list(defaultPlace.keys()):
         name='unknown'
         
     MPS=defaultPlace[name][1]
@@ -402,7 +403,7 @@ homeNumberMax=int(INHABITANTS/(15-WEALTH))#dai 15 abitandi per casa di 49 mquadr
 homeNumberMin=int(INHABITANTS/(12-WEALTH))#dai 12 abitanti per casa di 49 mquadri <-> 2 abitanti per casa di 400 mquadri | 1000/6 => 166 house
 homeNumber=random.randint(homeNumberMax,homeNumberMin)
 
-print('This city needs '+str(homeNumber)+' house')  
+print('This city needs '+str(homeNumber)+' house')
 
 #homeNumber=5
 
@@ -426,7 +427,7 @@ if('WOOD' in RESOURCES):
     touch=0 
     while(touch<WOOD_SPREADING):
         touch=touch+1
-        print('*'),
+        print('*', end=' ')
         for place in nature:        
             for place2 in nature:
                 if(not (id(place)==id(place2))):
@@ -469,9 +470,9 @@ for p in range(0,RESOURCES.count('CAVE')):
     MPS=200
     mps=30
     if(random.randint(0,1)==0):
-        p1=Point(random.randint(0,CITY_SIZE_X/3),random.randint(0,CITY_SIZE_Y))
+        p1=Point(random.randint(0,int(CITY_SIZE_X/3)),random.randint(0,CITY_SIZE_Y))
     else:
-        p1=Point(random.randint(0,CITY_SIZE_X),random.randint(0,CITY_SIZE_Y/3))
+        p1=Point(random.randint(0,CITY_SIZE_X),random.randint(0,int(CITY_SIZE_Y/3)))
     p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
     place=Rect(p1,p2)
     place.set_name('CAVE')
@@ -504,14 +505,14 @@ for i in range(0,len(PLACESN)):
 PLACESN=PLACES2            
 
 print('Building free house')
-for i in range(0,(homeNumber/20)-len(buildings)):
+for i in range(0,int((homeNumber/20))-len(buildings)):
     place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
     buildings.append(place)
 
 old_town=homeNumber/100*20
 new_town=homeNumber/100*80
 
-print('Old city will have '+str(old_town)+' house') 
+print('Old city will have '+str(old_town)+' house')
 
 
 def deduce_direction(field,duty):
@@ -600,7 +601,7 @@ def conflictSolver(field,buildings,area,duty):
     return (field,buildings,top,left,right,bottom)
 
 def generaPlace(buildings,homeNumber):
-    for i in range(0,homeNumber):
+    for i in range(0,int(homeNumber)):
         old_place=buildings[random.randint(0,len(buildings)-1)]
         place=createPlace(old_place)
         buildings.append(place)    
@@ -709,11 +710,11 @@ def mappa_zone(buildings):
             buildings.extend(col)
     return buildings
 
-buildings=generaPlace(buildings,old_town)     
+buildings=generaPlace(buildings,old_town)
 
 buildings=mappa_zone(buildings)
 
-print('Old city has '+str(len(buildings))+' instead of '+str(old_town)) 
+print('Old city has '+str(len(buildings))+' instead of '+str(old_town))
 perim=()
 if( 'WALL' in RESOURCES ):
     perim= perimetralWall(buildings)
@@ -786,7 +787,7 @@ maxsize=maxsize+30
 
 CITY_SIZE_X_TRUE=CITY_SIZE_X+maxsize*WIDTH_LEGEND
 
-img = Image.new( 'RGB', (CITY_SIZE_X_TRUE,CITY_SIZE_Y), "#C8C8C8") # create a new black image
+img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(CITY_SIZE_Y)), "#C8C8C8") # create a new black image
 pixels = img.load() # create the pixel map        
 draw = ImageDraw.Draw(img)
 
@@ -855,7 +856,7 @@ filename='map/mappa_'+str(mas)
 img.save(filename+'.png')
 
 obj=((CITY_SIZE_X,CITY_SIZE_Y),RESOURCES,PLACES,buildings,nature)
-f = open(filename+'.map', "w")
+f = open(filename+'.map', "wb")
 pickle.dump(obj, f)
 
  
