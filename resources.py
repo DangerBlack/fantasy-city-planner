@@ -125,10 +125,9 @@ def resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS):
 
 
     #now some other paramethers from   http://www222.pair.com/sjohn/blueroom/demog.htm
-
+    # (PLACE, SV)
     '''
     OTHER_PLACE=(
-
         ('BAKERY',800),
         ('BARBER_SHOP',350),
         ('BATHER',1900),
@@ -181,15 +180,13 @@ def resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS):
         ('WINE-SELLERS',900),
         ('WOODCARVER_SHOP',2400),
         ('WOODSELLERS',2400),
-
     )
     '''
     OTHER_PLACE=(
-
         ('BAKERY',800),
         ('BEER_SHOP',1400),
         ('BOOKBINDERS_SHOP',3000),
-        ('BOOK_SHOP',6300)
+        ('BOOK_SHOP',6300),
         ('BUTCHER_SHOP',1200),
         ('CHICKEN_BUTCHER_SHOP',1000),
         ('COPYIST',2000),
