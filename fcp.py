@@ -397,13 +397,13 @@ def perimetralWall(house_pure):
     perim=convex_hull(points)
     perim.append(perim[0])
     return perim
-    
 
 homeNumberMax=int(INHABITANTS/(15-WEALTH))#dai 15 abitandi per casa di 49 mquadri <-> 5 abitanti per casa di 400 mquadri | 1000/9 => 111 house
 homeNumberMin=int(INHABITANTS/(12-WEALTH))#dai 12 abitanti per casa di 49 mquadri <-> 2 abitanti per casa di 400 mquadri | 1000/6 => 166 house
 homeNumber=random.randint(homeNumberMax,homeNumberMin)
 
-print('This city needs '+str(homeNumber)+' house')
+
+print('This city needs '+str(homeNumber)+' house' + ("s" if homeNumber>1 else ""))
 
 #homeNumber=5
 
