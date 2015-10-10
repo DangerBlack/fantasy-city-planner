@@ -293,7 +293,7 @@ def createPlaceDefault(p,name):
         if(random.randint(0,1)==0):
             p1.x=p1.x+int(CITY_SIZE_X/3)
         else:
-            p1.x=p1.x-(CITY_SIZE_X/3)
+            p1.x=p1.x-int(CITY_SIZE_X/3)
         if(random.randint(0,1)==0):
             p1.y=p1.y+int(CITY_SIZE_Y/3)
         else:
