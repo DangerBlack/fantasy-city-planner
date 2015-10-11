@@ -4,192 +4,192 @@ MIN_PLACE_SIZE: 6
 MAX_PLACE_SIZE: 20
 
 CASTLE:
-  min_size: MIN_PLACE_SIZE*WEALTH/2
-  max_size: MAX_PLACE_SIZE*WEALTH/2
-  region: center
-  color: '#85DADA'
+- MIN_PLACE_SIZE*WEALTH/2
+- MAX_PLACE_SIZE*WEALTH/2
+- center
+- '#85DADA'
 
 MARKET:
-  min_size: 30,20*WEALTH
-  region: center
-  color: '#FFCC99'
+- 30,20*WEALTH
+- center
+- '#FFCC99'
 
 PARK:
-  min_size: 30,35*WEALTH
-  region: urban
-  color: '#2EB82E'
+- 30,35*WEALTH
+- urban
+- '#2EB82E'
 
 SANCTUARY:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: free
-  color: '#009999'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- free
+- '#009999'
 
 CHURCH:
-  min_size: MAX_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#009999'
+- MAX_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#009999'
 
 CATHEDRAL:
-  min_size: MAX_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*3
-  region: center
-  color: '#009999'
+- MAX_PLACE_SIZE
+- MAX_PLACE_SIZE*3
+- center
+- '#009999'
 
 SAWMILL:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: rural
-  color: '#333300'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- rural
+- '#333300'
 
 BAKERY:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#FFCC00'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#FFCC00'
 
 LEATHER_SHOP:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#CC3300'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#CC3300'
 
 TAILOR_SHOP:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#CC6699'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#CC6699'
 
 STABLE:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#996633'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#996633'
 
 ARMOR_SHOP:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#CC3300'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#CC3300'
 
 WEAPON_SHOP:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#0000FF'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#0000FF'
 
 SMITHY:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#0000FF'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#0000FF'
 
 INN:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#CC6600'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#CC6600'
 
 BARRACK:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#666666'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#666666'
 
 HERBALISTS:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#669900'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#669900'
 
 LAZARETTO:
-  min_size: MAX_PLACE_SIZE/2
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#FFFFFF'
+- MAX_PLACE_SIZE/2
+- MAX_PLACE_SIZE*2
+- urban
+- '#FFFFFF'
 
 BUTCHER_SHOP:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#FF9999'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#FF9999'
 
 WHOREHOUSE:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#CC0000'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#CC0000'
 
 GUILD_OF_WARRIOR:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#666666'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#666666'
 
 GUILD_OF_ARTIST:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#00FF99'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#00FF99'
 
 GUILD_OF_THIEF:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#FFFFFF'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#FFFFFF'
 
 GUILD_OF_MAGE:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#FF9900'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#FF9900'
 
 GUILD_OF_BUILDER:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#FF0000'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#FF0000'
 
 GUILD_OF_HERBALISTS:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#669900'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#669900'
 
 GUILD_OF_GOLDSMITH:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#FFFF00'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#FFFF00'
 
 GUILD_OF_IRONMONGER:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#5F5F5F'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#5F5F5F'
 
 THEATRE:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#0066CC'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#0066CC'
 
 ARENA:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: urban
-  color: '#CC0000'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- urban
+- '#CC0000'
 
 OBSERVATORY:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE*2
-  region: rural
-  color: '#0000CC'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE*2
+- rural
+- '#0000CC'
 
 unknown:
-  min_size: MIN_PLACE_SIZE
-  max_size: MAX_PLACE_SIZE
-  region: urban
-  color: '#000066'
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#000066'
 
