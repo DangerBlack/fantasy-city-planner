@@ -1,0 +1,60 @@
+---
+# The city name
+CITY_NAME: Carcosa
+
+# General size, in meters
+CITY_SIZE_X: 800
+CITY_SIZE_Y: 600
+
+# Scaling factor?
+METER_PIXEL_RATIO: 0.5
+
+# Explicitly set population.  Use "null" to calculate based on city area
+INHABITANTS: null
+
+# Wealth of the city: 1=poor, 10=rich
+WEALTH: 6
+
+# Force certain special buildings
+PLACES: [ 'CASTLE', 'SANCTUARY', 'CHURCH' ]
+
+DEFENCE: 1
+SEA: [ NO, NO, NO, NO ]
+
+# Resources
+RESOURCES:
+- WOOD
+- FISH
+- LEATHER
+- HORSE
+- WALL
+#- PIG
+#- CAVE
+#- WALL
+#- SILK
+#- WOOL
+#- RIVERX
+#- RIVERY
+
+
+# Largest dimension of a house (1px=0.5m)
+MAX_PLACE_SIZE: 20
+# Smallest dimension of the biggest house (1px=0.5m)
+MIN_PLACE_SIZE: 6
+
+# Default color for buildings
+DEFAULT_COLOR: '#505050'
+
+WOOD_SPREADING: 3
+DEFENSE: 1
+
+
+
+
+
+FONT_SIZE: 20
+FONT_LIST:
+- tramd.ttf
+- OldLondon.ttf
+- Ruritania.ttf
+
