@@ -1,5 +1,11 @@
 ---
 
+# PLACE_TYPE
+# - minimum place size
+# - maximum place size
+# - location (free, urban, rural, center)
+# - color (hex)
+
 MIN_PLACE_SIZE: 6
 MAX_PLACE_SIZE: 20
 
@@ -10,12 +16,14 @@ CASTLE:
 - '#85DADA'
 
 MARKET:
-- 30,20*WEALTH
+- 30
+- 20*WEALTH
 - center
 - '#FFCC99'
 
 PARK:
-- 30,35*WEALTH
+- 30
+- 35*WEALTH
 - urban
 - '#2EB82E'
 
