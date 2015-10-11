@@ -50,8 +50,8 @@ CITY_SIZE_Y=300
 
 #london dc => 15'000 inhabitants  530m*530m
 
-#london 1100dc => 15'000 inhabitants  530m*530m
-#london 1300dc => 80'000 inhabitants  1500m*1000m
+#london 1100dc => 15'000 inhabitants  530m*530m   = .0534 people/m^2
+#london 1300dc => 80'000 inhabitants  1500m*1000m = .0533 people/m^2
 
 
 SUGGESTED_INHABITANTS_BY_LONDON=((CITY_SIZE_X*METER_PIXEL_RATIO)*(CITY_SIZE_Y*METER_PIXEL_RATIO))*80000/1500000;
