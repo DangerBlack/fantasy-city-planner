@@ -677,7 +677,7 @@ draw.text((10,10),"City of "+CITY_NAME,fill="red",font=font)
 img.show()
 
 
-print("Fantasy City Planner has finish to create city of "+CITY_NAME)
+print("Fantasy City Planner has finnished creating the city of "+CITY_NAME)
 
 
 #SALVA MAPPA
