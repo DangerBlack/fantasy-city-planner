@@ -46,6 +46,12 @@ if __name__ == "__main__":
 
     config = parse(conf_file)
 
+    print("----------------------------\nDefault config:\n")
+    print(yaml.dump(defaults))
+    print("----------------------------\nRead config:\n")
     print(yaml.dump(config))
     
-
+    print("----------------------------\nMerged config:\n")
+    merged=defaults.copy()
+    merged.update(config)
+    print(yaml.dump(merged))

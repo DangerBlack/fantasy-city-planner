@@ -1,19 +1,19 @@
 ---
 # The city name
-CITY_NAME: Carcosa
+CITY_NAME: Megatown
 
 # General size, in meters
 CITY_SIZE_X: 300
 CITY_SIZE_Y: 300
 
 # Explicitly set population.  Use "null" to calculate based on city area
-INHABITANTS: null
+INHABITANTS: 1000
 
 # Wealth of the city: 1=poor, 10=rich
-WEALTH: 6
+#WEALTH: 6
 
 # Force certain special buildings
-PLACES: [ 'CASTLE', 'SANCTUARY', 'CHURCH' ]
+#PLACES: [ 'CASTLE', 'SANCTUARY', 'CHURCH' ]
 
 # Resources
 RESOURCES:
@@ -22,22 +22,10 @@ RESOURCES:
 - LEATHER
 - HORSE
 - WALL
-  #- PIG
-  #- CAVE
-  #- WOLL
-  #- WALL
-  #- RIVERX
-  #- RIVERY
-
-
-# Largest dimension of a house (1px=0.5m)
-MAX_PLACE_SIZE: 20
-# Smallest dimension of the biggest house (1px=0.5m)
-MIN_PLACE_SIZE: 6
-
-# Default color for buildings
-DEFAULT_COLOR: '#505050'
-
-WOOD_SPREADING: 3
-DEFENSE: 1
+- PIG
+- CAVE
+- WOOL
+- WALL
+- RIVERX
+- RIVERY
 
