@@ -53,11 +53,15 @@ CITY_SIZE_Y=300
 #london 1100dc => 15'000 inhabitants  530m*530m   = .0534 people/m^2
 #london 1300dc => 80'000 inhabitants  1500m*1000m = .0533 people/m^2
 
+PEOPLE_PER_METER_SQ = 80000/(1500*1000)
 
-SUGGESTED_INHABITANTS_BY_LONDON=((CITY_SIZE_X*METER_PIXEL_RATIO)*(CITY_SIZE_Y*METER_PIXEL_RATIO))*80000/1500000;
+SUGGESTED_INHABITANTS_BY_LONDON=int((CITY_SIZE_X * CITY_SIZE_Y * METER_PIXEL_RATIO**2) * PEOPLE_PER_METER_SQ)
+
 print("Suggested inhabitants: "+str(SUGGESTED_INHABITANTS_BY_LONDON))
 
 INHABITANTS=640
+INHABITANTS=SUGGESTED_INHABITANTS_BY_LONDON
+
 RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL','CAVE']
 WEALTH=6 #1-10
 PLACES=['CASTLE','SANCTUARY','CHURCH']
@@ -333,8 +337,8 @@ for i in range(0,int((homeNumber/20))-len(buildings)):
     place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
     buildings.append(place)
 
-old_town=homeNumber/100*20
-new_town=homeNumber/100*80
+old_town=homeNumber//100*20
+new_town=homeNumber//100*80
 
 print('Old city will have '+str(old_town)+' house')
 
@@ -519,13 +523,12 @@ def test_temp(yy,xx,place):
 
 
 def mappa_zone(buildings):
-    zone=[[[],[]],[[],[]]]
+    zone=[ [[], []], [[], []] ]
     for place in buildings:
-            yy=not_less_bounds(int(place.top/(CITY_SIZE_Y/2)),0,1)
-            xx=not_less_bounds(int(place.left/(CITY_SIZE_X/2)),0,1)
-            test_temp(xx,yy,place)
-            zone[yy][xx].append(place)
-
+        yy=not_less_bounds(int(place.top/(CITY_SIZE_Y/2)),0,1)
+        xx=not_less_bounds(int(place.left/(CITY_SIZE_X/2)),0,1)
+        test_temp(xx,yy,place)
+        zone[yy][xx].append(place)
 
     scambi=True
     duty=0
@@ -596,7 +599,9 @@ for place in list(buildings):
                         if(r==1):
                             place.move(1,place.bottom-place.top+place2.bottom-place2.top)
 
-print('The city has '+str(len(buildings))+' instead of '+str(homeNumber)+' suggested inhabitants '+str(len(buildings)*(14-WEALTH)))
+print('The city has '+str(len(buildings))+
+      ' instead of '+str(homeNumber)+
+      ' suggested inhabitants '+str(len(buildings)*(14-WEALTH)))
 
 
 
