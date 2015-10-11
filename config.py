@@ -4,21 +4,7 @@
 # Part of Fantasy City Planner.
 # See fcp.py for license details.
 
-
-def set_defaults(conf_file='defaults.yaml'):
-    import yaml
-
-    try:
-        stream = open(conf_file, 'r')
-
-    except IOError as e: 
-        print("Error opening ["+conf_file+"]: "+str(e)+"\n")
-
-    defaults = yaml.load(stream)
-    return defaults
-
-
-def parse(conf_file):
+def load_yaml_file(conf_file):
     import yaml
 
     try:
@@ -37,14 +23,17 @@ if __name__ == "__main__":
     import sys
     import yaml
 
+    defaults = load_yaml_file('defaults.yaml')
+
     if len(sys.argv)<2:
         conf_file = 'config.yaml'
     else:
         conf_file = sys.argv[1]
 
-    defaults = set_defaults()
+    config = load_yaml_file(conf_file)
 
-    config = parse(conf_file)
+
+
 
     print("----------------------------\nDefault config:\n")
     print(yaml.dump(defaults))
