@@ -21,18 +21,20 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import random
 from random import randrange
-from rect import Point
-from rect import Rect
-from hull import *
-from resources import *
 from multiprocessing import Pool
 from functools import partial
 import os
 import pickle
 
+from rect import Point
+from rect import Rect
+from hull import *
+from resources import *
+from defaults import *
+
 FONT_SIZE=20
 
-FONT_LIST=("Treamd.ttf","OldLondon.ttf","Ruritania.ttf")
+FONT_LIST=("Treamd.ttf", "OldLondon.ttf", "Ruritania.ttf")
 FONT_DIR="fonts/"
 font = ImageFont.truetype(FONT_DIR+FONT_LIST[0], FONT_SIZE)
 
@@ -70,71 +72,15 @@ DEFAULT_COLOR='#505050'
 WOOD_SPREADING=3
 
 
-#FINE CONFIGURAZIONE INIZIALE
-
-defaultPlace={}
-
-
-# center, urban, free, rural,
-defaultPlace['CASTLE']=((MIN_PLACE_SIZE*WEALTH/2),(MAX_PLACE_SIZE*WEALTH)/2,'center','#85DADA')
-defaultPlace['MARKET']=(30,20*WEALTH,'center','#FFCC99')
-defaultPlace['PARK']=(30,35*WEALTH,'urban','#2EB82E')
-defaultPlace['SANCTUARY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'free','#009999')
-defaultPlace['CHURCH']=(MAX_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#009999')
-defaultPlace['CATHEDRAL']=(MAX_PLACE_SIZE,MAX_PLACE_SIZE*3,'center','#009999')
-defaultPlace['SAWMILL']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'rural','#333300')#SEGHERIA
-defaultPlace['BAKERY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#FFCC00')
-defaultPlace['LEATHER_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC3300')
-defaultPlace['TAILOR_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC6699')
-defaultPlace['STABLE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#996633')
-defaultPlace['ARMOR_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC3300')
-defaultPlace['WEAPON_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#0000FF')
-defaultPlace['SMITHY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#0000FF')#FUCINA
-defaultPlace['INN']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC6600')
-defaultPlace['BARRACK']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#666666')#CASERMA
-defaultPlace['HERBALISTS']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#669900')
-defaultPlace['LAZARETTO']=(MAX_PLACE_SIZE/2,MAX_PLACE_SIZE*2,'urban','#FFFFFF')
-defaultPlace['BUTCHER_SHOP']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#FF9999')#macelleria
-defaultPlace['WHOREHOUSE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#CC0000')#BORDELLO
-defaultPlace['GUILD_OF_WARRIOR']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#666666')
-defaultPlace['GUILD_OF_ARTIST']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#00FF99')
-defaultPlace['GUILD_OF_THIEF']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FFFFFF')
-defaultPlace['GUILD_OF_MAGE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FF9900')
-defaultPlace['GUILD_OF_BUILDER']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FF0000')
-defaultPlace['GUILD_OF_HERBALISTS']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#669900')
-defaultPlace['GUILD_OF_GOLDSMITH']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#FFFF00')
-defaultPlace['GUILD_OF_IRONMONGER']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#5F5F5F')
-defaultPlace['THEATRE']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#0066CC')
-defaultPlace['ARENA']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'urban','#CC0000')
-defaultPlace['OBSERVATORY']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE*2,'rural','#0000CC')
-defaultPlace['unknown']=(MIN_PLACE_SIZE,MAX_PLACE_SIZE,'urban','#000066')
-
-def getDefaultPlace(name):
-    res=defaultPlace['unknown']
-    if name in list(defaultPlace.keys()):
-        res=defaultPlace[name]
-    return res
-    
-defaultResurce={}
-defaultResurce['WOOD']=('green','removable')
-defaultResurce['RIVER']=('#00CCFF','fixed')
-defaultResurce['RIVERX']=('#00CCFF','fixed')
-defaultResurce['RIVERY']=('#00CCFF','fixed')
-defaultResurce['CAVE']=('#323232','fixed')
-
-
 #deduct from resources and find inconsistency!
 resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS)
 
 #end consistency checker
 
+#get defaults
 
-def getDefaultPlace(name):
-    res=defaultPlace['unknown']
-    if name in list(defaultPlace.keys()):
-        res=defaultPlace[name]
-    return res
-
+defaultPlace = get_default_places(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH)
+defaultResurce = get_default_resurces(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH) 
 
 def createPlaceFree():
     p1=Point(random.randint(0,CITY_SIZE_X), random.randint(0,CITY_SIZE_Y))
@@ -261,7 +207,7 @@ def createPolygonFromRect(r,ndot):
 def perimetralWall(house_pure):
     points=[]
     for h in house_pure:
-        info=getDefaultPlace(h.name)
+        info=getDefaultPlace(h.name, defaultPlace)
         if(h.name=='HOUSE') or (not info[2]=='rural') or (not info[2]=='free'):
             dx=h.right-h.left
             dy=h.bottom-h.top
@@ -368,7 +314,7 @@ PLACESN=list(PLACES)
 PLACES2=list(PLACES)
 for i in range(0,len(PLACESN)):
     #place=createPlacePoint(Point(int(CITY_SIZE_X/2),int(CITY_SIZE_Y/2)))
-    info=getDefaultPlace(PLACESN[i])
+    info=getDefaultPlace(PLACESN[i], defaultPlace)
     
     if(not (info[2]=='rural') or (info[2]=='free')):
         #se no e gia tra gli edifici aggiungilo e rimuovlo
@@ -693,7 +639,7 @@ draw.line(perim,width=2,fill='#1A1A1A');
 for place in buildings:
     color=DEFAULT_COLOR;
     if(not place.name=='HOUSE'):
-        info=getDefaultPlace(place.name)
+        info=getDefaultPlace(place.name, defaultPlace)
         color=info[3]
         draw.rectangle(place.get_list(), outline=DEFAULT_COLOR, fill=color )
         draw.text((place.top_left().x+5,place.top_left().y),place.name[0:1],fill="red",font=font)
@@ -712,7 +658,7 @@ for i in range(0,len(LIGHT_PLACES)):
     if((TOP*(FONT_SIZE+1)+10)>CITY_SIZE_Y):
         TOP=0
         LEFT=LEFT-1
-    info=getDefaultPlace(LIGHT_PLACES[i])
+    info=getDefaultPlace(LIGHT_PLACES[i], defaultPlace)
     draw.rectangle((CITY_SIZE_X_TRUE-maxsize*LEFT+5,10+TOP*(FONT_SIZE)+1,CITY_SIZE_X_TRUE-maxsize*LEFT+10,10+TOP*(FONT_SIZE)+FONT_SIZE-2),fill=info[3])
     draw.text((CITY_SIZE_X_TRUE-maxsize*LEFT+15,10+TOP*(FONT_SIZE)),LIGHT_PLACES[i][0:1]+": "+LIGHT_PLACES[i].lower().title(),fill="red",font=font)
     TOP=TOP+1
