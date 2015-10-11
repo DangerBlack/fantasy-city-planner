@@ -1,0 +1,17 @@
+---
+WOOD:
+  color: '#green'
+  mobile: removable
+RIVER:
+  color: '#00CCFF'
+  mobile: fixed
+RIVERX:
+  color: '#00CCFF'
+  mobile: fixed
+RIVERY:
+  color: '#00CCFF'
+  mobile: fixed
+CAVE:
+  color: '#323232'
+  mobile: fixed
+

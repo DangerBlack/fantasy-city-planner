@@ -44,3 +44,9 @@ if __name__ == "__main__":
     merged=defaults.copy()
     merged.update(config)
     print(yaml.dump(merged))
+
+    places = load_yaml_file('places.yaml')
+    print(places)
+
+    resources = load_yaml_file('resources.yaml')
+    print(resources)
