@@ -670,14 +670,23 @@ draw.line(perim,width=2,fill='#1A1A1A');
 
 #STAMPA EDIFICI
 for place in buildings:
-    color=DEFAULT_COLOR;
+    outline = config['DEFAULT_COLOR']
+    fill=None
     if(not place.name=='HOUSE'):
         info=getDefaultPlace(place.name, defaultPlace)
-        color=info[3]
-        draw.rectangle(place.get_list(), outline=DEFAULT_COLOR, fill=color )
-        draw.text((place.top_left().x+5,place.top_left().y),place.name[0:1],fill="red",font=font)
-    else:
-        draw.rectangle(place.get_list(), outline=color)
+        fill = info[3]
+
+    # Draw the rectangle firsts, so the text is on top.
+    draw.rectangle(place.get_list(), outline=outline, fill=fill)
+
+    if(not place.name=='HOUSE'):
+        abbr = info[4]
+        draw.text(
+            (place.top_left().x+5,place.top_left().y),
+            abbr,
+            fill="red",font=font
+        )
+
 
 
 #STAMPA LEGENDA
