@@ -682,19 +682,47 @@ for place in buildings:
 
 #STAMPA LEGENDA
 def draw_legend(draw):
+    # Draw basic box
     draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), fill='white' )
     draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), outline='black' )
 
     LEFT=WIDTH_LEGEND
     TOP=0
+
+    # loop over sorted places
     for i in range(0,len(LIGHT_PLACES)):
+
+        # move to next column if needed
         if((TOP*(FONT_SIZE+1)+10)>CITY_SIZE_Y):
             TOP=0
             LEFT=LEFT-1
+
         info=getDefaultPlace(LIGHT_PLACES[i], defaultPlace)
-        draw.rectangle((CITY_SIZE_X_TRUE-maxsize*LEFT+5,10+TOP*(FONT_SIZE)+1,CITY_SIZE_X_TRUE-maxsize*LEFT+10,10+TOP*(FONT_SIZE)+FONT_SIZE-2),fill=info[3])
-        draw.text((CITY_SIZE_X_TRUE-maxsize*LEFT+15,10+TOP*(FONT_SIZE)),LIGHT_PLACES[i][0:1]+": "+LIGHT_PLACES[i].lower().title(),fill="red",font=font)
-        TOP=TOP+1
+
+        CSXTL = CITY_SIZE_X_TRUE-maxsize*LEFT
+        TFS = 10 + TOP*FONT_SIZE
+
+        # draw a colored box
+        draw.rectangle( (
+            CSXTL+5, TFS+1,
+            CSXTL+10,TFS+FONT_SIZE-2
+            ),fill=info[3]
+        )
+
+        # Draw text
+        label = LIGHT_PLACES[i].lower().title()
+        abbr = info[4]
+        string = abbr+': '+label
+        x=CSXTL+15
+        y=TFS
+        print(x,y,"label="+string)
+        draw.text( 
+            ( x, y ),
+            string,
+            fill="red",font=font
+        )
+
+        TOP+=1
 
 
 def draw_scale(draw,ratio):
