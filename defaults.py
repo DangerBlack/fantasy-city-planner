@@ -14,12 +14,6 @@ def getDefaultPlace(name, defaultPlace):
     
 
 def get_default_resurces(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH):
-    defaultResurce={}
-    defaultResurce['WOOD']=('green','removable')
-    defaultResurce['RIVER']=('#00CCFF','fixed')
-    defaultResurce['RIVERX']=('#00CCFF','fixed')
-    defaultResurce['RIVERY']=('#00CCFF','fixed')
-    defaultResurce['CAVE']=('#323232','fixed')
-
-    return defaultResurce
+    from config import load_yaml_file
+    return load_yaml_file('resources.yaml')    
 
