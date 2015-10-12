@@ -17,33 +17,34 @@ def load_yaml_file(conf_file):
     return config
 
 
+def load_config_file(conf_file='config.yaml'):
+    defaults = load_yaml_file('defaults.yaml')
+    config = load_yaml_file(conf_file)
+    merged=defaults.copy()
+    merged.update(config)
+    #print("----------------------------\nDefault config:\n")
+    #print(yaml.dump(defaults))
+    #print("----------------------------\nRead config:\n")
+    #print(yaml.dump(config))
+    #print("----------------------------\nMerged config:\n")
+    #print(yaml.dump(merged))
+    
+    return merged
 
 
 if __name__ == "__main__":
     import sys
     import yaml
 
-    defaults = load_yaml_file('defaults.yaml')
 
     if len(sys.argv)<2:
         conf_file = 'config.yaml'
     else:
         conf_file = sys.argv[1]
 
-    config = load_yaml_file(conf_file)
+    config = load_config_file(conf_file)
 
 
-
-
-    print("----------------------------\nDefault config:\n")
-    print(yaml.dump(defaults))
-    print("----------------------------\nRead config:\n")
-    print(yaml.dump(config))
-    
-    print("----------------------------\nMerged config:\n")
-    merged=defaults.copy()
-    merged.update(config)
-    print(yaml.dump(merged))
 
     places = load_yaml_file('places.yaml')
     print(places)
