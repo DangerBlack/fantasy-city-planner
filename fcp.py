@@ -25,13 +25,25 @@ from multiprocessing import Pool
 from functools import partial
 import os
 import pickle
+import parser
 
 from rect import Point
 from rect import Rect
 from hull import *
 from resources import *
 from defaults import *
+from config import *
 
+
+config = load_config_file()
+places = load_yaml_file('places.yaml')
+resources = load_yaml_file('resources.yaml')
+
+print(config)
+print(places)
+print(resources)
+
+print(config['MIN_PLACE_SIZE'])
 FONT_SIZE=20
 
 FONT_LIST=("Treamd.ttf", "OldLondon.ttf", "Ruritania.ttf")
@@ -86,11 +98,19 @@ resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS)
 defaultPlace = get_default_places(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH)
 defaultResurce = get_default_resurces(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH) 
 
+
 def createPlaceFree():
     p1=Point(random.randint(0,CITY_SIZE_X), random.randint(0,CITY_SIZE_Y))
     p2=Point(random.randint(p1.x+MIN_PLACE_SIZE,p1.x+MAX_PLACE_SIZE),   random.randint(p1.y+MIN_PLACE_SIZE,p1.y+MAX_PLACE_SIZE))
     place=Rect(p1,p2)
     return place
+
+def eval_eqn(string):
+    #print("In -> "+str(string))
+    code=parser.expr(str(string)).compile()
+    evaluated=eval(code)
+    #print("Out-> ",str(evaluated))
+    return evaluated
 
 
 def createPlaceDefault(p,name):
@@ -98,8 +118,15 @@ def createPlaceDefault(p,name):
     if not name in list(defaultPlace.keys()):
         name='unknown'
 
-    MPS=defaultPlace[name][1]
-    mps=defaultPlace[name][0]
+    MIN_PLACE_SIZE=config['MIN_PLACE_SIZE']
+    MAX_PLACE_SIZE=config['MAX_PLACE_SIZE']
+    WEALTH=config['WEALTH']
+
+    mps=eval_eqn(defaultPlace[name][0])
+    MPS=eval_eqn(defaultPlace[name][1])
+
+    print(mps,MPS)
+
     if(defaultPlace[name][2]=='free'):
         p1=Point(random.randint(0,CITY_SIZE_X),random.randint(0,CITY_SIZE_Y))
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
@@ -545,6 +572,9 @@ def mappa_zone(buildings):
         for col in row:
             buildings.extend(col)
     return buildings
+
+
+#--------------------------------------------------------------------------
 
 buildings=generaPlace(buildings,old_town)
 
