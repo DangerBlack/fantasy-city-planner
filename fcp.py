@@ -640,8 +640,7 @@ print('The city has '+str(len(buildings))+
 
 LIGHT_PLACES=list(set(PLACES))
 LIGHT_PLACES=sorted(LIGHT_PLACES)
-print(LIGHT_PLACES)
-print(len(LIGHT_PLACES))
+print(LIGHT_PLACES, len(LIGHT_PLACES))
 WIDTH_LEGEND=len(LIGHT_PLACES)*FONT_SIZE/CITY_SIZE_Y+1;
 print('servirebbero +'+str(WIDTH_LEGEND)+' COLONNE')
 
@@ -681,32 +680,38 @@ for place in buildings:
         draw.rectangle(place.get_list(), outline=color)
 
 
-
 #STAMPA LEGENDA
-draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), fill='white' )
-draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), outline='black' )
+def draw_legend(draw):
+    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), fill='white' )
+    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,CITY_SIZE_Y-5), outline='black' )
 
-LEFT=WIDTH_LEGEND
-TOP=0
-for i in range(0,len(LIGHT_PLACES)):
-    if((TOP*(FONT_SIZE+1)+10)>CITY_SIZE_Y):
-        TOP=0
-        LEFT=LEFT-1
-    info=getDefaultPlace(LIGHT_PLACES[i], defaultPlace)
-    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*LEFT+5,10+TOP*(FONT_SIZE)+1,CITY_SIZE_X_TRUE-maxsize*LEFT+10,10+TOP*(FONT_SIZE)+FONT_SIZE-2),fill=info[3])
-    draw.text((CITY_SIZE_X_TRUE-maxsize*LEFT+15,10+TOP*(FONT_SIZE)),LIGHT_PLACES[i][0:1]+": "+LIGHT_PLACES[i].lower().title(),fill="red",font=font)
-    TOP=TOP+1
+    LEFT=WIDTH_LEGEND
+    TOP=0
+    for i in range(0,len(LIGHT_PLACES)):
+        if((TOP*(FONT_SIZE+1)+10)>CITY_SIZE_Y):
+            TOP=0
+            LEFT=LEFT-1
+        info=getDefaultPlace(LIGHT_PLACES[i], defaultPlace)
+        draw.rectangle((CITY_SIZE_X_TRUE-maxsize*LEFT+5,10+TOP*(FONT_SIZE)+1,CITY_SIZE_X_TRUE-maxsize*LEFT+10,10+TOP*(FONT_SIZE)+FONT_SIZE-2),fill=info[3])
+        draw.text((CITY_SIZE_X_TRUE-maxsize*LEFT+15,10+TOP*(FONT_SIZE)),LIGHT_PLACES[i][0:1]+": "+LIGHT_PLACES[i].lower().title(),fill="red",font=font)
+        TOP=TOP+1
 
 
-LUNGHEZZA_CAMPIONE=200
-draw.line((CITY_SIZE_X-5-LUNGHEZZA_CAMPIONE,CITY_SIZE_Y-10,CITY_SIZE_X-5,CITY_SIZE_Y-10),width=2,fill='red');
-TEXT=str(METER_PIXEL_RATIO*LUNGHEZZA_CAMPIONE)+' m'
-draw.text((CITY_SIZE_X-LUNGHEZZA_CAMPIONE+LUNGHEZZA_CAMPIONE/3,CITY_SIZE_Y-10-(FONT_SIZE)),TEXT,fill="red",font=font)
+def draw_scale(draw,ratio):
+    LUNGHEZZA_CAMPIONE=200
+    draw.line((CITY_SIZE_X-5-LUNGHEZZA_CAMPIONE,CITY_SIZE_Y-10,CITY_SIZE_X-5,CITY_SIZE_Y-10),width=2,fill='red');
+    TEXT=str(ratio*LUNGHEZZA_CAMPIONE)+' m'
+    draw.text((CITY_SIZE_X-LUNGHEZZA_CAMPIONE+LUNGHEZZA_CAMPIONE/3,CITY_SIZE_Y-10-(FONT_SIZE)),TEXT,fill="red",font=font)
 
-draw.text((10,10),"City of "+CITY_NAME,fill="red",font=font)
+def draw_title(draw, name, font):
+    draw.text((10,10),"City of "+name,fill="red",font=font)
+    #draw.line((CITY_SIZE_X/2,0,CITY_SIZE_X/2,CITY_SIZE_Y),width=1,fill='red');
+    #draw.line((0,CITY_SIZE_Y/2,CITY_SIZE_X,CITY_SIZE_Y/2),width=1,fill='red');
 
-#draw.line((CITY_SIZE_X/2,0,CITY_SIZE_X/2,CITY_SIZE_Y),width=1,fill='red');
-#draw.line((0,CITY_SIZE_Y/2,CITY_SIZE_X,CITY_SIZE_Y/2),width=1,fill='red');
+
+draw_legend(draw)
+draw_scale(draw,config['METER_PIXEL_RATIO'])
+draw_title(draw, config['CITY_NAME'], font)
 
 img.show()
 
