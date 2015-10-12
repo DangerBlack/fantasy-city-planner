@@ -46,9 +46,8 @@ print(resources)
 print(config['MIN_PLACE_SIZE'])
 FONT_SIZE=20
 
-FONT_LIST=("MedievalSharp-Oblique.ttf", "OldLondon.ttf", "Ruritania.ttf")
 FONT_DIR="fonts/"
-font = ImageFont.truetype(FONT_DIR+FONT_LIST[0], FONT_SIZE)
+font = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], FONT_SIZE)
 
 #THIS IS ONLY FOR HUMAN READABLE USAGE
 KIND_OF_RESOURCES=('WOOD','FISH','LEATHER','PIG','HORSE','CAVE','SILK','WOOL')
