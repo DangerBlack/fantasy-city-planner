@@ -45,6 +45,7 @@ print(resources)
 
 FONT_DIR="fonts/"
 font   = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], config['FONT_SIZE'])
+fontsm = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], int(0.75 * config['FONT_SIZE']))
 
 #THIS IS ONLY FOR HUMAN READABLE USAGE
 KIND_OF_RESOURCES=('WOOD','FISH','LEATHER','PIG','HORSE','CAVE','SILK','WOOL')
@@ -681,7 +682,7 @@ for place in buildings:
         draw.text(
             (place.top_left().x+5,place.top_left().y),
             abbr,
-            fill="red",font=font
+            fill="red",font=fontsm
         )
 
 
