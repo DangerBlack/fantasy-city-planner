@@ -46,7 +46,7 @@ print(resources)
 print(config['MIN_PLACE_SIZE'])
 FONT_SIZE=20
 
-FONT_LIST=("Treamd.ttf", "OldLondon.ttf", "Ruritania.ttf")
+FONT_LIST=("MedievalSharp-Oblique.ttf", "OldLondon.ttf", "Ruritania.ttf")
 FONT_DIR="fonts/"
 font = ImageFont.truetype(FONT_DIR+FONT_LIST[0], FONT_SIZE)
 

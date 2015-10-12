@@ -43,4 +43,7 @@ pip install Pillow
 ```
 
 
+##Fonts
+The font is "MedievalSharp" by Wojciech Kalinowski, distributed under the SIL.
+For the complete package, see http://openfontlibrary.org/
 
