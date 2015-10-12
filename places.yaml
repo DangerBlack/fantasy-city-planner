@@ -65,12 +65,49 @@ BAKERY:
 - '#FFCC00'
 - Ba
 
+BARBER_SHOP:
+- null
+- null
+- urban
+- '#ee0000'
+- Bb
+
+BATHER:
+- null
+- null
+- urban
+- '#ee0000'
+- Bt
+
+BEER_SHOP:
+- null
+- null
+- urban
+- '#ee0000'
+- Br
+
+BLEACHER_SHOP:
+- null
+- null
+- urban
+- '#ee0000'
+- Bl
+
 LEATHER_SHOP:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
 - urban
 - '#CC3300'
 - Le
+
+BOOKBINDERS_SHOP::
+- null
+- null
+- urban
+- '#ee0000'
+- Br
+
+
 
 TAILOR_SHOP:
 - MIN_PLACE_SIZE
