@@ -4,10 +4,10 @@ CITY_NAME: Megatown
 
 # General size, in meters
 CITY_SIZE_X: 300
-CITY_SIZE_Y: 300
+CITY_SIZE_Y: 600
 
 # Explicitly set population.  Use "null" to calculate based on city area
-INHABITANTS: 1000
+INHABITANTS: null
 
 # Wealth of the city: 1=poor, 10=rich
 #WEALTH: 6

@@ -53,18 +53,22 @@ KIND_OF_RESOURCES=('WOOD','FISH','LEATHER','PIG','HORSE','CAVE','SILK','WOOL')
 #PARAMETRI DI CONFIGURAZIONE INIZIALE DELLO SCRIPT
 METER_PIXEL_RATIO=0.5
 
-#london dc => 15'000 inhabitants  530m*530m
-#london 1100dc => 15'000 inhabitants  530m*530m   = .0534 people/m^2
-#london 1300dc => 80'000 inhabitants  1500m*1000m = .0533 people/m^2
+if config['INHABITANTS'] is not None:
+    INHABITANTS=config['INHABITANTS']
+else:
+    #london dc => 15'000 inhabitants  530m*530m
+    #london 1100dc => 15'000 inhabitants  530m*530m   = .0534 people/m^2
+    #london 1300dc => 80'000 inhabitants  1500m*1000m = .0533 people/m^2
 
-PEOPLE_PER_METER_SQ = 80000/(1500*1000)
+    PEOPLE_PER_METER_SQ = 80000/(1500*1000)
 
-SUGGESTED_INHABITANTS_BY_LONDON=int((config['CITY_SIZE_X'] * config['CITY_SIZE_Y'] * METER_PIXEL_RATIO**2) * PEOPLE_PER_METER_SQ)
+    SUGGESTED_INHABITANTS_BY_LONDON=int((config['CITY_SIZE_X'] * config['CITY_SIZE_Y'] * METER_PIXEL_RATIO**2) * PEOPLE_PER_METER_SQ)
 
-print("Suggested inhabitants: "+str(SUGGESTED_INHABITANTS_BY_LONDON))
+    print("Suggested inhabitants: "+str(SUGGESTED_INHABITANTS_BY_LONDON))
 
-INHABITANTS=640
-INHABITANTS=SUGGESTED_INHABITANTS_BY_LONDON
+    INHABITANTS=SUGGESTED_INHABITANTS_BY_LONDON
+
+print("Current inhabitants: "+str(INHABITANTS))
 
 RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL','CAVE']
 WEALTH=6 #1-10
