@@ -43,11 +43,8 @@ print(config)
 print(places)
 print(resources)
 
-print(config['MIN_PLACE_SIZE'])
-FONT_SIZE=20
-
 FONT_DIR="fonts/"
-font = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], FONT_SIZE)
+font   = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], config['FONT_SIZE'])
 
 #THIS IS ONLY FOR HUMAN READABLE USAGE
 KIND_OF_RESOURCES=('WOOD','FISH','LEATHER','PIG','HORSE','CAVE','SILK','WOOL')
@@ -641,7 +638,7 @@ print('The city has '+str(len(buildings))+
 LIGHT_PLACES=list(set(PLACES))
 LIGHT_PLACES=sorted(LIGHT_PLACES)
 print(LIGHT_PLACES, len(LIGHT_PLACES))
-WIDTH_LEGEND=len(LIGHT_PLACES)*FONT_SIZE/CITY_SIZE_Y+1;
+WIDTH_LEGEND=len(LIGHT_PLACES)*config['FONT_SIZE']/CITY_SIZE_Y+1;
 print('servirebbero +'+str(WIDTH_LEGEND)+' COLONNE')
 
 #GENERA DIMENSIONE TESTO LEGENDA SU MAPPA
@@ -702,19 +699,19 @@ def draw_legend(draw):
     for i in range(0,len(LIGHT_PLACES)):
 
         # move to next column if needed
-        if((TOP*(FONT_SIZE+1)+10)>CITY_SIZE_Y):
+        if((TOP*(config['FONT_SIZE']+1)+10)>CITY_SIZE_Y):
             TOP=0
             LEFT=LEFT-1
 
         info=getDefaultPlace(LIGHT_PLACES[i], defaultPlace)
 
         CSXTL = CITY_SIZE_X_TRUE-maxsize*LEFT
-        TFS = 10 + TOP*FONT_SIZE
+        TFS = 10 + TOP*config['FONT_SIZE']
 
         # draw a colored box
         draw.rectangle( (
             CSXTL+5, TFS+1,
-            CSXTL+10,TFS+FONT_SIZE-2
+            CSXTL+10,TFS+config['FONT_SIZE']-2
             ),fill=info[3]
         )
 
@@ -738,7 +735,7 @@ def draw_scale(draw,ratio):
     LUNGHEZZA_CAMPIONE=200
     draw.line((CITY_SIZE_X-5-LUNGHEZZA_CAMPIONE,CITY_SIZE_Y-10,CITY_SIZE_X-5,CITY_SIZE_Y-10),width=2,fill='red');
     TEXT=str(ratio*LUNGHEZZA_CAMPIONE)+' m'
-    draw.text((CITY_SIZE_X-LUNGHEZZA_CAMPIONE+LUNGHEZZA_CAMPIONE/3,CITY_SIZE_Y-10-(FONT_SIZE)),TEXT,fill="red",font=font)
+    draw.text((CITY_SIZE_X-LUNGHEZZA_CAMPIONE+LUNGHEZZA_CAMPIONE/3,CITY_SIZE_Y-10-(config['FONT_SIZE'])),TEXT,fill="red",font=font)
 
 def draw_title(draw, name, font):
     draw.text((10,10),"City of "+name,fill="red",font=font)
