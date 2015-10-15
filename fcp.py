@@ -730,6 +730,8 @@ def draw_legend(draw):
 
         TOP+=1
 
+def myround(x, base=5):
+    return int(base * round(float(x)/base))
 
 def draw_scale(draw,ratio):
     LUNGHEZZA_CAMPIONE=200
