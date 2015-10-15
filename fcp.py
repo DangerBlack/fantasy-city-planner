@@ -39,6 +39,8 @@ config = load_config_file()
 places = load_yaml_file('places.yaml')
 resources = load_yaml_file('resources.yaml')
 
+random.seed(1029384756) # repeatabilty for testing
+
 print(config)
 print(places)
 print(resources)
@@ -638,17 +640,18 @@ print('The city has '+str(len(buildings))+
 LIGHT_PLACES=list(set(PLACES))
 LIGHT_PLACES=sorted(LIGHT_PLACES)
 print(LIGHT_PLACES, len(LIGHT_PLACES))
-WIDTH_LEGEND=len(LIGHT_PLACES)*config['FONT_SIZE']/config['CITY_SIZE_Y']+1;
+WIDTH_LEGEND=int(len(LIGHT_PLACES)*config['FONT_SIZE']/config['CITY_SIZE_Y']+1);
 print('servirebbero +'+str(WIDTH_LEGEND)+' COLONNE')
 
 #GENERA DIMENSIONE TESTO LEGENDA SU MAPPA
+# get largest dimension of legend text, set the legend width based on that
 maxsize=1
 for i in range(0,len(PLACES)):
     if(font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]>maxsize):
         maxsize=font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]
 maxsize=maxsize+30
 
-CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+maxsize*WIDTH_LEGEND
+CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+maxsize*WIDTH_LEGEND+75  # 75px fudge-factor for buildinsg outside the eastern walls
 
 img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(config['CITY_SIZE_Y'])), "#C8C8C8") # create a new black image
 pixels = img.load() # create the pixel map
@@ -666,6 +669,7 @@ for n in nature:
 draw.line(perim,width=2,fill='#1A1A1A');
 
 #STAMPA EDIFICI
+# Label buildings
 for place in buildings:
     outline = config['DEFAULT_COLOR']
     fill=None
@@ -679,7 +683,7 @@ for place in buildings:
     if(not place.name=='HOUSE'):
         abbr = info[4]
         draw.text(
-            (place.top_left().x+5,place.top_left().y),
+            (place.top_left().x+3,place.top_left().y),
             abbr,
             fill="red",font=fontsm
         )
@@ -689,8 +693,7 @@ for place in buildings:
 #STAMPA LEGENDA
 def draw_legend(draw):
     # Draw basic box
-    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,config['CITY_SIZE_Y']-5), fill='white' )
-    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,config['CITY_SIZE_Y']-5), outline='black' )
+    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,config['CITY_SIZE_Y']-5), fill='white', outline='black' )
 
     LEFT=WIDTH_LEGEND
     TOP=0
@@ -721,7 +724,7 @@ def draw_legend(draw):
         string = abbr+': '+label
         x=CSXTL+15
         y=TFS
-        print(x,y,"label="+string)
+        print(int(x),int(y),"label="+string)
         draw.text( 
             ( x, y ),
             string,
