@@ -640,7 +640,7 @@ print('The city has '+str(len(buildings))+
 LIGHT_PLACES=list(set(PLACES))
 LIGHT_PLACES=sorted(LIGHT_PLACES)
 print(LIGHT_PLACES, len(LIGHT_PLACES))
-WIDTH_LEGEND=len(LIGHT_PLACES)*config['FONT_SIZE']/config['CITY_SIZE_Y']+1;
+WIDTH_LEGEND=int(len(LIGHT_PLACES)*config['FONT_SIZE']/config['CITY_SIZE_Y']+1);
 print('servirebbero +'+str(WIDTH_LEGEND)+' COLONNE')
 
 #GENERA DIMENSIONE TESTO LEGENDA SU MAPPA
