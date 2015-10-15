@@ -668,6 +668,7 @@ for n in nature:
 draw.line(perim,width=2,fill='#1A1A1A');
 
 #STAMPA EDIFICI
+# Label buildings
 for place in buildings:
     outline = config['DEFAULT_COLOR']
     fill=None
@@ -681,7 +682,7 @@ for place in buildings:
     if(not place.name=='HOUSE'):
         abbr = info[4]
         draw.text(
-            (place.top_left().x+5,place.top_left().y),
+            (place.top_left().x+3,place.top_left().y),
             abbr,
             fill="red",font=fontsm
         )
@@ -691,8 +692,7 @@ for place in buildings:
 #STAMPA LEGENDA
 def draw_legend(draw):
     # Draw basic box
-    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,config['CITY_SIZE_Y']-5), fill='white' )
-    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,config['CITY_SIZE_Y']-5), outline='black' )
+    draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,config['CITY_SIZE_Y']-5), fill='white', outline='black' )
 
     LEFT=WIDTH_LEGEND
     TOP=0
@@ -723,7 +723,7 @@ def draw_legend(draw):
         string = abbr+': '+label
         x=CSXTL+15
         y=TFS
-        print(x,y,"label="+string)
+        print(int(x),int(y),"label="+string)
         draw.text( 
             ( x, y ),
             string,
