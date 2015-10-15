@@ -533,27 +533,39 @@ def not_less_bounds(number,lower,upper):
 
 
 def test_temp(yy,xx,place):
-    nw=Rect(Point(0,0),Point(config['CITY_SIZE_X']/2,config['CITY_SIZE_Y']/2))
-    ne=Rect(Point(config['CITY_SIZE_X']/2,0),Point(config['CITY_SIZE_X'],config['CITY_SIZE_Y']/2))
-    sw=Rect(Point(0,config['CITY_SIZE_Y']/2),Point(config['CITY_SIZE_X']/2,config['CITY_SIZE_Y']))
-    se=Rect(Point(config['CITY_SIZE_X']/2,config['CITY_SIZE_Y']/2),Point(config['CITY_SIZE_X'],config['CITY_SIZE_Y']))
+    CX=config['CITY_SIZE_X']
+    CY=config['CITY_SIZE_Y']
+
+    # Make 4 rectangles, one for each qudrant
+    nw=Rect(Point(0,0), Point(CX//2, CY//2))
+    ne=Rect(Point(CX//2,0), Point(CX//2,CY//2))
+    sw=Rect(Point(0,CY//2), Point(CX//2,CY))
+    se=Rect(Point(CX//2,CY//2), Point(CX,CY))
+
     if(xx==0)and(yy==0):
         if(not nw.overlaps(place)):
-            print('errore micidiale 1');
+            print('errore micidiale 1 (nw)');
+            return False
     if(xx==0)and(yy==1):
         if(not ne.overlaps(place)):
-            print('errore micidiale 2');
+            print('errore micidiale 2 (ne)');
+            return False
     if(xx==1)and(yy==0):
         if(not sw.overlaps(place)):
-            print('errore micidiale 3');
+            print('errore micidiale 3 (sw)');
+            return False
     if(xx==1)and(yy==1):
         if(not se.overlaps(place)):
-            print('errore micidiale 4');
+            print('errore micidiale 4 (se)');
+            return False
+    return True
 
 
 def mappa_zone(buildings):
     zone=[ [[], []], [[], []] ]
     for place in buildings:
+        # xx and yy are normalized to [0,1] within the overall image.
+        # 
         yy=not_less_bounds(int(place.top/(config['CITY_SIZE_Y']/2)),0,1)
         xx=not_less_bounds(int(place.left/(config['CITY_SIZE_X']/2)),0,1)
         test_temp(xx,yy,place)
