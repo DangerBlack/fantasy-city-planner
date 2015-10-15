@@ -734,10 +734,17 @@ def myround(x, base=5):
     return int(base * round(float(x)/base))
 
 def draw_scale(draw,ratio):
-    LUNGHEZZA_CAMPIONE=200
-    draw.line((config['CITY_SIZE_X']-5-LUNGHEZZA_CAMPIONE,config['CITY_SIZE_Y']-10,config['CITY_SIZE_X']-5,config['CITY_SIZE_Y']-10),width=2,fill='red');
-    TEXT=str(ratio*LUNGHEZZA_CAMPIONE)+' m'
-    draw.text((config['CITY_SIZE_X']-LUNGHEZZA_CAMPIONE+LUNGHEZZA_CAMPIONE/3,config['CITY_SIZE_Y']-10-(config['FONT_SIZE'])),TEXT,fill="red",font=font)
+    # scale length, in px
+    CX=config['CITY_SIZE_X']
+    CY=config['CITY_SIZE_Y']
+
+    LUNGHEZZA_CAMPIONE=min(200, int(ratio*myround(ratio*CX/2)))
+
+    TEXT=str(LUNGHEZZA_CAMPIONE)+' m'
+    text_width_px = font.getsize(TEXT)[0]
+
+    draw.line( (CX-LUNGHEZZA_CAMPIONE-5, CY-10, CX-5, CY-10),width=2,fill='red');
+    draw.text( (CX-5-(text_width_px+LUNGHEZZA_CAMPIONE)//2, CY-10-config['FONT_SIZE']-1), TEXT, fill="red", font=font)
 
 def draw_title(draw, name, font):
     draw.text((10,10),"City of "+name,fill="red",font=font)
