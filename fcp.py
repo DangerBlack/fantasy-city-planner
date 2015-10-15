@@ -644,13 +644,14 @@ WIDTH_LEGEND=int(len(LIGHT_PLACES)*config['FONT_SIZE']/config['CITY_SIZE_Y']+1);
 print('servirebbero +'+str(WIDTH_LEGEND)+' COLONNE')
 
 #GENERA DIMENSIONE TESTO LEGENDA SU MAPPA
+# get largest dimension of legend text, set the legend width based on that
 maxsize=1
 for i in range(0,len(PLACES)):
     if(font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]>maxsize):
         maxsize=font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]
 maxsize=maxsize+30
 
-CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+maxsize*WIDTH_LEGEND
+CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+maxsize*WIDTH_LEGEND+75  # 75px fudge-factor for buildinsg outside the eastern walls
 
 img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(config['CITY_SIZE_Y'])), "#C8C8C8") # create a new black image
 pixels = img.load() # create the pixel map
