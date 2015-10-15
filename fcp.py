@@ -39,6 +39,8 @@ config = load_config_file()
 places = load_yaml_file('places.yaml')
 resources = load_yaml_file('resources.yaml')
 
+random.seed(1029384756) # repeatabilty for testing
+
 print(config)
 print(places)
 print(resources)
