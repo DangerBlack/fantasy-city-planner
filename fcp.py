@@ -46,8 +46,12 @@ print(places)
 print(resources)
 
 FONT_DIR="fonts/"
-font   = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], config['FONT_SIZE'])
-fontsm = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], int(0.75 * config['FONT_SIZE']))
+font_size = config['FONT_SIZE']
+font_size_sm = int(font_size*0.75)
+font_size_lg = int(font_size*1.25)
+font   = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], font_size)
+fontsm = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], font_size_sm)
+fontlg = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], font_size_lg)
 
 #THIS IS ONLY FOR HUMAN READABLE USAGE
 KIND_OF_RESOURCES=('WOOD','FISH','LEATHER','PIG','HORSE','CAVE','SILK','WOOL')
@@ -744,10 +748,10 @@ def draw_scale(draw,ratio):
     LUNGHEZZA_CAMPIONE=min(200, int(ratio*myround(ratio*CX/2)))
 
     TEXT=str(LUNGHEZZA_CAMPIONE)+' m'
-    text_width_px = font.getsize(TEXT)[0]
+    text_width_px = fontlg.getsize(TEXT)[0]
 
     draw.line( (CX-LUNGHEZZA_CAMPIONE-5, CY-10, CX-5, CY-10),width=2,fill='red');
-    draw.text( (CX-5-(text_width_px+LUNGHEZZA_CAMPIONE)//2, CY-10-config['FONT_SIZE']-1), TEXT, fill="red", font=font)
+    draw.text( (CX-5-(text_width_px+LUNGHEZZA_CAMPIONE)//2, CY-10-int(1.25*config['FONT_SIZE'])-1), TEXT, fill="red", font=fontlg)
 
 def draw_title(draw, name, font):
     draw.text((10,10),"City of "+name,fill="red",font=font)
