@@ -1,10 +1,13 @@
 ---
 
+# Places are converted to arrays within the code.  
+# The array elements are indexed as follows:
 # PLACE_TYPE
 # - minimum place size
 # - maximum place size
 # - location (free, urban, rural, center)
 # - color (hex)
+# - Two letter abbreviation (used in the map legend)
 
 MIN_PLACE_SIZE: 6
 MAX_PLACE_SIZE: 20
