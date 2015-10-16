@@ -268,31 +268,44 @@ print('This city needs '+str(homeNumber)+' house' + ("s" if homeNumber>1 else ""
 
 buildings=[]
 
-nature=[]
 
+# piantare alcuni alberi
+def plantForest(seedlings, wealth, spreading ):
 
-print('Building forest')
-if('WOOD' in RESOURCES):
-    for i in range(0,15):
-        element=createNatureFree(3,3)
-        element.set_name('WOOD')
-        nature.append(element)
+    print('Planting forest')
+    nature=[]
+    if('WOOD' in RESOURCES):
+        print(' Planting %s random seedlings' % seedlings)
+        for i in range(0,seedlings):
+            element=createNatureFree(3,3)
+            element.set_name('WOOD')
+            nature.append(element)
+            
+        print(' Growing forest')
+        num_seedlings = len(nature)
+        for i in range(0,200*wealth):
+            seedling = random.randint(0,num_seedlings-1)
+            element=createNature(nature[seedling],3,3,3,3)
+            element.set_name('WOOD')
+            nature.append(element)
         
-    for i in range(0,200*WEALTH):
-        element=createNature(nature[random.randint(0,len(nature)-1)],3,3,3,3)
-        element.set_name('WOOD')
-        nature.append(element)
-    
-    touch=0 
-    while(touch<WOOD_SPREADING):
-        touch=touch+1
-        print('*', end=' ')
-        for place in nature:        
-            for place2 in nature:
-                if(not (id(place)==id(place2))):
-                    if(place.overlaps(place2)):
-                        place.move(random.randint(0,4),random.randint(20,30))   
+
+        #Move the trees around to enlarge the forest
+        touch=spreading
+        while(touch):
+            touch-=1
+            print('*', end=' ')
+            for place in nature:        
+                for place2 in nature:
+                    if(not (id(place)==id(place2))):
+                        if(place.overlaps(place2)):
+                            # move 20-30 px in the cardinal directions
+                            place.move(random.randint(0,4),random.randint(20,30))   
+    return nature
+
+nature = plantForest(config['SEEDLINGS'], config['WEALTH'], config['WOOD_SPREADING'])
 print('[10/10]')
+
 print('Building river')
 
 for p in range(0,RESOURCES.count('RIVERX')):
