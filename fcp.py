@@ -76,18 +76,19 @@ else:
 
 print("Current inhabitants: "+str(INHABITANTS))
 
-RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL','CAVE']
-WEALTH=6 #1-10
-PLACES=['CASTLE','SANCTUARY','CHURCH']
-DEFENCE=1 #1-10
-SEA=("NO","NO","NO","NO")
+# List of resources present on the map
+RESOURCES=config['RESOURCES']
+WEALTH=config['WEALTH']
+PLACES=config['PLACES']
+DEFENCE=config['DEFENSE']
+SEA=config['SEA']
 
-MAX_PLACE_SIZE=20
-MIN_PLACE_SIZE=6
+MAX_PLACE_SIZE=config['MAX_PLACE_SIZE']
+MIN_PLACE_SIZE=config['MIN_PLACE_SIZE']
 
-DEFAULT_COLOR='#505050'
+DEFAULT_COLOR=config['DEFAULT_COLOR']
 
-WOOD_SPREADING=3
+WOOD_SPREADING=config['WOOD_SPREADING'];
 
 
 #deduct from resources and find inconsistency!
