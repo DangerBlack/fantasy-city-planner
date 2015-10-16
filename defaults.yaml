@@ -45,7 +45,11 @@ MIN_PLACE_SIZE: 6
 # Default color for buildings
 DEFAULT_COLOR: '#505050'
 
+# How many starting trees to use
+SEEDLINGS: 15
+# This controls how many passes to use when moving trees around the forest.  It's O(N^2), so be careful when using this with high SEEDLING and WEALTH values.
 WOOD_SPREADING: 3
+
 DEFENSE: 1
 
 
