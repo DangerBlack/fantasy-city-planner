@@ -170,7 +170,7 @@ def createPlace(old_place):
     place=Rect(p1,p2)
     return place
 
-
+# Creates a rect anywhere on the map, with dimensions (dx,dy)
 def createNatureFree(dx,dy):
     p1=Point(random.randint(0,config['CITY_SIZE_X']), random.randint(0,config['CITY_SIZE_Y']))
     p2=Point(p1.x+dx,p1.y+dy)
@@ -178,8 +178,10 @@ def createNatureFree(dx,dy):
     return place
 
 
+# Creates a rect with dimensions (dx,dy), relative to the top_left corner of old_place
 def createNature(old_place,sx,sy,dx,dy):
-    p1=Point(random.randint(old_place.top_left().x-sx-dx,old_place.top_left().x+sx+dx), random.randint(old_place.top_left().y-sy-dy,old_place.top_left().y+sy+dy))
+    p1=Point( random.randint(old_place.top_left().x-sx-dx, old_place.top_left().x+sx+dx), 
+              random.randint(old_place.top_left().y-sy-dy, old_place.top_left().y+sy+dy) )
     p2=Point(p1.x+dx,p1.y+dy)
     place=Rect(p1,p2)
     return place
