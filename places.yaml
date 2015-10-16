@@ -79,9 +79,9 @@ BATHER:
 - '#ee0000'
 - Bt
 
-BEER_SHOP:
-- null
-- null
+BREWERY:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
 - urban
 - '#ee0000'
 - Br
