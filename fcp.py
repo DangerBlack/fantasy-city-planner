@@ -121,14 +121,19 @@ def createPlaceDefault(p,name):
     if not name in list(defaultPlace.keys()):
         name='unknown'
 
-    MIN_PLACE_SIZE=config['MIN_PLACE_SIZE']
-    MAX_PLACE_SIZE=config['MAX_PLACE_SIZE']
-    WEALTH=config['WEALTH']
-
     mps=eval_eqn(defaultPlace[name][0])
     MPS=eval_eqn(defaultPlace[name][1])
 
-    print(mps,MPS)
+    print(name,mps,MPS)
+
+    thirdx = config['CITY_SIZE_X']//3
+    thirdx_up = thirdx + MPS
+    thirdx_dn = thirdx - MPS
+
+    thirdy = config['CITY_SIZE_Y']//3
+    thirdy_up = thirdy + MPS
+    thirdy_dn = thirdy - MPS
+
 
     if(defaultPlace[name][2]=='free'):
         p1=Point(random.randint(0,config['CITY_SIZE_X']),random.randint(0,config['CITY_SIZE_Y']))
@@ -139,19 +144,21 @@ def createPlaceDefault(p,name):
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
 
     if(defaultPlace[name][2]=='urban'):
-        p1=Point(random.randint(int(p.x-int(config['CITY_SIZE_X']/3)-MPS),int(p.x+int(config['CITY_SIZE_X']/3)+MPS)),random.randint(int(p.y-int(config['CITY_SIZE_Y']/3)-MPS),p.y+int(config['CITY_SIZE_Y']/3)+MPS))
-        p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
+        p1=Point( random.randint(p.x-thirdx_dn, p.x+thirdx_up), random.randint(p.y-thirdy_dn, p.y+thirdy_up) )
+        p2=Point( random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS) )
 
     if(defaultPlace[name][2]=='rural'):
-        p1=Point(random.randint(int(p.x-int(config['CITY_SIZE_X']/3)-MPS),int(p.x+int(config['CITY_SIZE_X']/3)+MPS)),random.randint(int(p.y-int(config['CITY_SIZE_Y']/3)-MPS),p.y+int(config['CITY_SIZE_Y']/3)+MPS))
+        p1=Point(random.randint( p.x-thirdx_dn,p.x+thirdx_up), random.randint(p.y-thirdy_dn,p.y+thirdy_up))
         if(random.randint(0,1)==0):
-            p1.x=p1.x+int(config['CITY_SIZE_X']/3)
+            p1.x=p1.x+thirdx
         else:
-            p1.x=p1.x-int(config['CITY_SIZE_X']/3)
+            p1.x=p1.x-thirdx
+
         if(random.randint(0,1)==0):
-            p1.y=p1.y+int(config['CITY_SIZE_Y']/3)
+            p1.y=p1.y+thirdy
         else:
-            p1.y=p1.y-int(config['CITY_SIZE_Y']/3)
+            p1.y=p1.y-thirdy
+
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
 
     place=Rect(p1,p2)
