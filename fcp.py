@@ -954,8 +954,6 @@ draw_title(draw, config['CITY_NAME'], font)
 img.show()
 
 
-print("Fantasy City Planner has finnished creating the city of "+config['CITY_NAME'])
-
 
 #SALVA MAPPA
 mas=0
@@ -969,6 +967,8 @@ obj=((config['CITY_SIZE_X'],config['CITY_SIZE_Y']),RESOURCES,PLACES,buildings,na
 f = open(filename+'.map', "wb")
 pickle.dump(obj, f)
 
+
+print("Fantasy City Planner has finnished creating the city of "+config['CITY_NAME'])
 
 
 #im.save(sys.stdout, "PNG")
