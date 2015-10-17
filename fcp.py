@@ -748,51 +748,54 @@ for i in range(0,len(PLACESN)):
 buildings=generaPlace(buildings,new_town)
 buildings=mappa_zone(buildings)
 
-print('Controllo conflitti natura')
+def natureConflict(buildings, nature):
+    test_set_collision=[]
+    print('Controllo conflitti natura')
+    for place in list(buildings):
+        for n in list(nature):
+            if(place.overlaps(n)):
+                if(defaultPlace[n.name][5]=='removable'):
+                    nature.remove(n)
+                else:
+                    if(place.name=='HOUSE'):
+                        try:
+                            buildings.remove(place)
+                        except ValueError as e:
+                            pass
+                    else:
+                        print('muovo a nord e su '+place.name)
+                        print(place)
+                        print(n)
+                        width=place.right-place.left
+                        height=place.bottom-place.top
+                        if(random.random()>0.5):
+                            place.top=n.top
+                            place.left=n.left
+                            place.bottom=place.top+height
+                            place.right=place.left+width
+                        else:
+                            place.top=n.top
+                            place.right=n.right
+                            place.bottom=place.top+height
+                            place.left=place.right-width
+                        test_set_collision.append(place)
+                        print(place)
+                        print('solved?')
+                        break
 
-test_set_collision=[]
-for place in list(buildings):
-	for n in list(nature):
-		if(place.overlaps(n)):
-			if(defaultPlace[n.name][5]=='removable'):
-				nature.remove(n)
-			else:
-				if(place.name=='HOUSE'):
-					try:
-						buildings.remove(place)
-					except ValueError as e:
-						pass
-				else:
-					print('muovo a nord e su '+place.name)
-					print(place)
-					print(n)
-					width=place.right-place.left
-					height=place.bottom-place.top
-					if(random.random()>0.5):
-						place.top=n.top
-						place.left=n.left
-						place.bottom=place.top+height
-						place.right=place.left+width
-					else:
-						place.top=n.top
-						place.right=n.right
-						place.bottom=place.top+height
-						place.left=place.right-width
-					test_set_collision.append(place)
-					print(place)
-					print('solved?')
-					break
+    '''I'm so bored about collision between buildings I had to remove a special buildings!'''
+    for place in list(test_set_collision):
+        for place2 in list(test_set_collision):
+            if(not id(place)==id(place2)) and (place.overlaps(place2)):
+                try:
+                    print('non ho potutto fare a meno di cancellarlo: '+str(place))
+                    buildings.remove(place)
+                    break
+                except ValueError as e:
+                    pass
 
-'''I'm so bored about collision between buildings I had to remove a special buildings!'''
-for place in list(test_set_collision):
-	for place2 in list(test_set_collision):
-		if(not id(place)==id(place2)) and (place.overlaps(place2)):
-			try:
-				print('non ho potutto fare a meno di cancellarlo: '+str(place))
-				buildings.remove(place)
-				break
-			except ValueError as e:
-				pass
+
+natureConflict(buildings, nature)
 
 print('The city has '+str(len(buildings))+
 	  ' instead of '+str(homeNumber)+
