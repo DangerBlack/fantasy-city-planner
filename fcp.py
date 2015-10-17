@@ -833,7 +833,8 @@ for n in nature:
 		draw.polygon(createPolygonFromRect(n,5), fill=defaultPlace[n.name][3])
 
 #STAMPA CINTA MURARIA
-draw.line(perim,width=2,fill='#1A1A1A');
+if( 'WALL' in RESOURCES ):
+    draw.line(perim,width=2,fill=config['WALL_COLOR']);
 
 #STAMPA EDIFICI
 # Label buildings
