@@ -69,15 +69,15 @@ BAKERY:
 - Ba
 
 BARBER_SHOP:
-- null
-- null
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
 - urban
 - '#ee0000'
 - Bb
 
 BATHER:
-- null
-- null
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
 - urban
 - '#ee0000'
 - Bt
@@ -90,8 +90,8 @@ BREWERY:
 - Be
 
 BLEACHER_SHOP:
-- null
-- null
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
 - urban
 - '#ee0000'
 - Bl
@@ -104,8 +104,8 @@ LEATHER_SHOP:
 - Le
 
 BOOKBINDERS_SHOP::
-- null
-- null
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
 - urban
 - '#ee0000'
 - Br
