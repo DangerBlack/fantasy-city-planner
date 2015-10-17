@@ -308,39 +308,48 @@ def plantForest(nature, seedlings, wealth, spreading ):
     return nature
 
 
+
+# direction:  0=north/sound, 1=east/west
+def dredgeRiverSingle(nature,direction,CX,CY):
+    rivert=[]
+
+    # This is the start coordinate of the river, perpendicular to the
+    # axis of the river.  N/S rivers choose positions on the E/W axis, 
+    # and vice-versa
+    axis_size = CX if direction else CY
+    line_pos=random.randint(0, axis_size)
+
+    #river width, no more than half the map
+    river_size=min(random.randint(3,120), axis_size//2) 
+
+    for i in range(0,axis_size):
+        if direction:
+            element=Rect(Point(i,line_pos),Point(i,line_pos+river_size))
+        else:
+            element=Rect(Point(line_pos,i),Point(line_pos+river_size,i))
+
+        element.set_name('RIVER')
+        rivert.append(element)
+
+    prev=0;
+    for f in rivert:
+        prev=prev+random.randint(-1,1)
+        f.move(direction+2,prev) # in rect, 1=up, 2=right
+    nature.extend(rivert)
+
+ 
+
 def dredgeRiver(nature):
 
-    rivers = RESOURCES.count('RIVERX')
+    rivers = RESOURCES.count('RIVERX') + RESOURCES.count('RIVERY')
     print('Building %d river%s' % ( rivers, 's' if rivers>1 else ''))
 
     for p in range(0,RESOURCES.count('RIVERX')):
-        rivert=[]
-        liney=random.randint(0,config['CITY_SIZE_Y'])
-        river_size=random.randint(3,120)
-        for i in range(0,config['CITY_SIZE_X']):
-            element=Rect(Point(i,liney),Point(i,liney+river_size))
-            element.set_name('RIVER')
-            rivert.append(element)
-
-        prev=0;
-        for f in rivert:
-            prev=prev+random.randint(-1,1)
-            f.move(1,prev)
-        nature.extend(rivert)
+        dredgeRiverSingle(nature, 0, config['CITY_SIZE_X'], config['CITY_SIZE_Y'])
 
     for p in range(0,RESOURCES.count('RIVERY')):
-        rivert=[]
-        linex=random.randint(0,config['CITY_SIZE_X'])
-        river_size=random.randint(3,120)
-        for i in range(0,config['CITY_SIZE_Y']):
-            element=Rect(Point(linex,i),Point(linex+river_size,i))
-            element.set_name('RIVER')
-            rivert.append(element)
-        prev=0;
-        for f in rivert:
-            prev=prev+random.randint(-1,1)
-            f.move(2,prev)
-        nature.extend(rivert)
+        dredgeRiverSingle(nature, 1, config['CITY_SIZE_X'], config['CITY_SIZE_Y'])
+
 
 def digCave(nature):
     caves = RESOURCES.count('CAVE')
