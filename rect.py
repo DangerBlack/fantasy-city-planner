@@ -219,7 +219,7 @@ class Rect:
         return [self.left,self.top,self.right,self.bottom]
         
     def __str__( self ):
-        return "<Rect (%s,%s)-(%s,%s)>" % (self.left,self.top,
+        return "<Rect %s (%s,%s)-(%s,%s)>" % (self.name,self.left,self.top,
                                            self.right,self.bottom)
     
     def __repr__(self):
