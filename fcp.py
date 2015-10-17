@@ -796,7 +796,7 @@ def natureConflict(buildings, nature):
                             place.bottom += y_overlap + height 
 
                         if place.left < 1 or place.top < 1 or place.bottom > config['CITY_SIZE_Y'] or place.right > config['CITY_SIZE_X']:
-                            building.remove(place)
+                            buildings.remove(place)
 
                         test_set_collision.append(place)
                         print(place)
