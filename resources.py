@@ -184,7 +184,7 @@ def resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS):
     '''
     OTHER_PLACE=(
         ('BAKERY',800),
-        ('BEER_SHOP',1400),
+        ('BREWERY',1400),
         ('BOOKBINDERS_SHOP',3000),
         ('BOOK_SHOP',6300),
         ('BUTCHER_SHOP',1200),

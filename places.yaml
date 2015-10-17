@@ -1,10 +1,13 @@
 ---
 
+# Places are converted to arrays within the code.  
+# The array elements are indexed as follows:
 # PLACE_TYPE
 # - minimum place size
 # - maximum place size
 # - location (free, urban, rural, center)
 # - color (hex)
+# - Two letter abbreviation (used in the map legend)
 
 MIN_PLACE_SIZE: 6
 MAX_PLACE_SIZE: 20
@@ -65,12 +68,49 @@ BAKERY:
 - '#FFCC00'
 - Ba
 
+BARBER_SHOP:
+- null
+- null
+- urban
+- '#ee0000'
+- Bb
+
+BATHER:
+- null
+- null
+- urban
+- '#ee0000'
+- Bt
+
+BREWERY:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#ee0000'
+- Be
+
+BLEACHER_SHOP:
+- null
+- null
+- urban
+- '#ee0000'
+- Bl
+
 LEATHER_SHOP:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
 - urban
 - '#CC3300'
 - Le
+
+BOOKBINDERS_SHOP::
+- null
+- null
+- urban
+- '#ee0000'
+- Br
+
+
 
 TAILOR_SHOP:
 - MIN_PLACE_SIZE
@@ -233,3 +273,47 @@ unknown:
 - '#000066'
 - Uk
 
+
+#----------
+# Resources
+#----------
+
+WOOD:
+- null
+- null
+- null
+- '#00FF00'
+- Wo
+- removable
+
+RIVER:
+- null
+- null
+- null
+- '#00CCFF'
+- Ri
+- fixed
+
+RIVERX:
+- null
+- null
+- null
+- '#00CCFF'
+- Rx
+- fixed
+
+RIVERY:
+- null
+- null
+- null
+- '#00CCFF'
+- fixed
+- Ry
+
+CAVE:
+- null
+- null
+- null
+- '#000000'
+- Ca
+- fixed

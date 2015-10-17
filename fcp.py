@@ -37,13 +37,11 @@ from config import *
 
 config = load_config_file()
 places = load_yaml_file('places.yaml')
-resources = load_yaml_file('resources.yaml')
 
 random.seed(1029384756) # repeatabilty for testing
 
 print(config)
 print(places)
-print(resources)
 
 FONT_DIR="fonts/"
 font_size = config['FONT_SIZE']
@@ -76,18 +74,19 @@ else:
 
 print("Current inhabitants: "+str(INHABITANTS))
 
-RESOURCES=['WOOD','FISH','LEATHER','HORSE','WALL','CAVE']
-WEALTH=6 #1-10
-PLACES=['CASTLE','SANCTUARY','CHURCH']
-DEFENCE=1 #1-10
-SEA=("NO","NO","NO","NO")
+# List of resources present on the map
+RESOURCES=config['RESOURCES']
+WEALTH=config['WEALTH']
+PLACES=config['PLACES']
+DEFENCE=config['DEFENSE']
+SEA=config['SEA']
 
-MAX_PLACE_SIZE=20
-MIN_PLACE_SIZE=6
+MAX_PLACE_SIZE=config['MAX_PLACE_SIZE']
+MIN_PLACE_SIZE=config['MIN_PLACE_SIZE']
 
-DEFAULT_COLOR='#505050'
+DEFAULT_COLOR=config['DEFAULT_COLOR']
 
-WOOD_SPREADING=3
+WOOD_SPREADING=config['WOOD_SPREADING'];
 
 
 #deduct from resources and find inconsistency!
@@ -98,7 +97,6 @@ resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS)
 #get defaults
 
 defaultPlace = get_default_places(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH)
-defaultResurce = get_default_resurces(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH)
 
 
 def createPlaceFree():
@@ -120,14 +118,19 @@ def createPlaceDefault(p,name):
     if not name in list(defaultPlace.keys()):
         name='unknown'
 
-    MIN_PLACE_SIZE=config['MIN_PLACE_SIZE']
-    MAX_PLACE_SIZE=config['MAX_PLACE_SIZE']
-    WEALTH=config['WEALTH']
-
     mps=eval_eqn(defaultPlace[name][0])
     MPS=eval_eqn(defaultPlace[name][1])
 
-    print(mps,MPS)
+    print(name,mps,MPS)
+
+    thirdx = config['CITY_SIZE_X']//3
+    thirdx_up = thirdx + MPS
+    thirdx_dn = thirdx - MPS
+
+    thirdy = config['CITY_SIZE_Y']//3
+    thirdy_up = thirdy + MPS
+    thirdy_dn = thirdy - MPS
+
 
     if(defaultPlace[name][2]=='free'):
         p1=Point(random.randint(0,config['CITY_SIZE_X']),random.randint(0,config['CITY_SIZE_Y']))
@@ -138,19 +141,21 @@ def createPlaceDefault(p,name):
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
 
     if(defaultPlace[name][2]=='urban'):
-        p1=Point(random.randint(int(p.x-int(config['CITY_SIZE_X']/3)-MPS),int(p.x+int(config['CITY_SIZE_X']/3)+MPS)),random.randint(int(p.y-int(config['CITY_SIZE_Y']/3)-MPS),p.y+int(config['CITY_SIZE_Y']/3)+MPS))
-        p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
+        p1=Point( random.randint(p.x-thirdx_dn, p.x+thirdx_up), random.randint(p.y-thirdy_dn, p.y+thirdy_up) )
+        p2=Point( random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS) )
 
     if(defaultPlace[name][2]=='rural'):
-        p1=Point(random.randint(int(p.x-int(config['CITY_SIZE_X']/3)-MPS),int(p.x+int(config['CITY_SIZE_X']/3)+MPS)),random.randint(int(p.y-int(config['CITY_SIZE_Y']/3)-MPS),p.y+int(config['CITY_SIZE_Y']/3)+MPS))
+        p1=Point(random.randint( p.x-thirdx_dn,p.x+thirdx_up), random.randint(p.y-thirdy_dn,p.y+thirdy_up))
         if(random.randint(0,1)==0):
-            p1.x=p1.x+int(config['CITY_SIZE_X']/3)
+            p1.x=p1.x+thirdx
         else:
-            p1.x=p1.x-int(config['CITY_SIZE_X']/3)
+            p1.x=p1.x-thirdx
+
         if(random.randint(0,1)==0):
-            p1.y=p1.y+int(config['CITY_SIZE_Y']/3)
+            p1.y=p1.y+thirdy
         else:
-            p1.y=p1.y-int(config['CITY_SIZE_Y']/3)
+            p1.y=p1.y-thirdy
+
         p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
 
     place=Rect(p1,p2)
@@ -648,7 +653,7 @@ print('Controllo conflitti natura')
 for place in list(buildings):
     for n in list(nature):
         if(place.overlaps(n)):
-            if(defaultResurce[n.name][1]=='removable'):
+            if(defaultPlace[n.name][5]=='removable'):
                 nature.remove(n)
             else:
                 if(place.name=='HOUSE'):
@@ -709,9 +714,9 @@ draw = ImageDraw.Draw(img)
 #STAMPA NATURA
 for n in nature:
     if(not n.name=='CAVE'):
-        draw.rectangle(n.get_list(), fill=defaultResurce[n.name][0])
+        draw.rectangle(n.get_list(), fill=defaultPlace[n.name][3])
     else:
-        draw.polygon(createPolygonFromRect(n,5), fill=defaultResurce[n.name][0])
+        draw.polygon(createPolygonFromRect(n,5), fill=defaultPlace[n.name][3])
 
 #STAMPA CINTA MURARIA
 draw.line(perim,width=2,fill='#1A1A1A');
