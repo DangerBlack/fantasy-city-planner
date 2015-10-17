@@ -754,9 +754,11 @@ def natureConflict(buildings, nature):
     for place in list(buildings):
         for n in list(nature):
             if(place.overlaps(n)):
+                # If the natural object marked removable, do so.
                 if(defaultPlace[n.name][5]=='removable'):
                     nature.remove(n)
                 else:
+                    # just remove plain houses if possible
                     if(place.name=='HOUSE'):
                         try:
                             buildings.remove(place)
@@ -766,18 +768,36 @@ def natureConflict(buildings, nature):
                         print('muovo a nord e su '+place.name)
                         print(place)
                         print(n)
+
                         width=place.right-place.left
                         height=place.bottom-place.top
-                        if(random.random()>0.5):
-                            place.top=n.top
-                            place.left=n.left
-                            place.bottom=place.top+height
-                            place.right=place.left+width
+                        n_width = n.right-n.left
+                        n_height = n.bottom-n.top
+
+                        # Shift the smallest distance, then randomly U/D or L/R
+                        x_overlap = place.right - n.left
+                        y_overlap = place.bottom - n.top
+
+                        print(" (%d, %d) -> %d " % (x_overlap,y_overlap, min(x_overlap, y_overlap)))
+
+                        if x_overlap < width//2:
+                            place.left  -= x_overlap
+                            place.right -= x_overlap
                         else:
-                            place.top=n.top
-                            place.right=n.right
-                            place.bottom=place.top+height
-                            place.left=place.right-width
+                            place.left  += width + x_overlap
+                            place.right += width + x_overlap
+
+                        # vert is smaller
+                        if y_overlap < height//2:
+                            place.top    -= y_overlap
+                            place.bottom -= y_overlap
+                        else:
+                            place.top    += y_overlap + height 
+                            place.bottom += y_overlap + height 
+
+                        if place.left < 1 or place.top < 1 or place.bottom > config['CITY_SIZE_Y'] or place.right > config['CITY_SIZE_X']:
+                            building.remove(place)
+
                         test_set_collision.append(place)
                         print(place)
                         print('solved?')
