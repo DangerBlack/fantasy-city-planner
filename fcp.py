@@ -749,6 +749,8 @@ buildings=generaPlace(buildings,new_town)
 buildings=mappa_zone(buildings)
 
 print('Controllo conflitti natura')
+
+test_set_collision=[]
 for place in list(buildings):
 	for n in list(nature):
 		if(place.overlaps(n)):
@@ -761,10 +763,36 @@ for place in list(buildings):
 					except ValueError as e:
 						pass
 				else:
-					pass
-					'''print('muovo a nord '+place.name+' di : '+str(n.top-place.top))
-					place.move(1,n.top-place.top)'''
+					print('muovo a nord e su '+place.name)
+					print(place)
+					print(n)
+					width=place.right-place.left
+					height=place.bottom-place.top
+					if(random.random()>0.5):
+						place.top=n.top
+						place.left=n.left
+						place.bottom=place.top+height
+						place.right=place.left+width
+					else:
+						place.top=n.top
+						place.right=n.right
+						place.bottom=place.top+height
+						place.left=place.right-width
+					test_set_collision.append(place)
+					print(place)
+					print('solved?')
+					break
 
+'''I'm so bored about collision between buildings I had to remove a special buildings!'''
+for place in list(test_set_collision):
+	for place2 in list(test_set_collision):
+		if(not id(place)==id(place2)) and (place.overlaps(place2)):
+			try:
+				print('non ho potutto fare a meno di cancellarlo: '+str(place))
+				buildings.remove(place)
+				break
+			except ValueError as e:
+				pass
 
 print('The city has '+str(len(buildings))+
 	  ' instead of '+str(homeNumber)+
