@@ -7,11 +7,10 @@ def get_default_places(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH):
 
 
 def getDefaultPlace(name, defaultPlace):
-    res=defaultPlace['unknown']
     if name in list(defaultPlace.keys()):
-        res=defaultPlace[name]
-    return res
-    
+        return defaultPlace[name]
+    print("Warn: %s not found in place database (places.yaml)" % name)
+    return defaultPlace['unknown']
 
 def get_default_resurces(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH):
     from config import load_yaml_file
