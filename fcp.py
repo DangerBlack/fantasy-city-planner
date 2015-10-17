@@ -381,23 +381,27 @@ dredgeRiver(nature)
 digCave(nature)
 print('[10/10]')
 
+#Search for e in list l
 def contains(l, e):
     for x in l:
         if x.name==e:
             return True
     return False
 
-print('Building the house')
+print('Building the special places')
 #CREAZIONE EDIFICI
 PLACESN=list(PLACES)
 PLACES2=list(PLACES)
+print(PLACESN)
 for i in range(0,len(PLACESN)):
     #place=createPlacePoint(Point(int(config['CITY_SIZE_X']/2),int(config['CITY_SIZE_Y']/2)))
     info=getDefaultPlace(PLACESN[i], defaultPlace)
 
+    # not rural or free == center or urban
     if(not (info[2]=='rural') or (info[2]=='free')):
         #se no e gia tra gli edifici aggiungilo e rimuovlo
         #se non e tra gli edifici saltalo
+        # If a building named in PLACESN does not exist, add it
         if(not contains(buildings, PLACESN[i])):
             place=createPlaceDefault(Point(int(config['CITY_SIZE_X']/2),int(config['CITY_SIZE_Y']/2)),PLACESN[i])
             place.set_name(PLACESN[i])
@@ -405,7 +409,10 @@ for i in range(0,len(PLACESN)):
             PLACES2.remove(PLACESN[i])
         else:
             pass
+
 PLACESN=PLACES2
+
+print(PLACESN)
 
 print('Building free house')
 for i in range(0,int((homeNumber/20))-len(buildings)):
@@ -416,6 +423,7 @@ old_town=homeNumber//100*20
 new_town=homeNumber//100*80
 
 print('Old city will have '+str(old_town)+' house')
+print('New city will have '+str(new_town)+' house')
 
 
 def deduce_direction(field,duty):
@@ -654,7 +662,7 @@ if( 'WALL' in RESOURCES ):
 
 
 #CREAZIONE EDIFICI RURALI
-
+# Place a few special buildings in rural areas, if any are left.
 for i in range(0,len(PLACESN)):
     #place=createPlacePoint(Point(int(config['CITY_SIZE_X']/2),int(config['CITY_SIZE_Y']/2)))
     #if(defaultPlace[PLACES[i]][2]=='rural') or (defaultPlace[PLACES[i]][2]=='free'):
