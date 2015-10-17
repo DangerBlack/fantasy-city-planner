@@ -98,7 +98,7 @@ resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS)
 #get defaults
 
 defaultPlace = get_default_places(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH)
-defaultResurce = get_default_resurces(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH) 
+defaultResurce = get_default_resurces(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH)
 
 
 def createPlaceFree():
@@ -180,7 +180,7 @@ def createNatureFree(dx,dy):
 
 # Creates a rect with dimensions (dx,dy), relative to the top_left corner of old_place
 def createNature(old_place,sx,sy,dx,dy):
-    p1=Point( random.randint(old_place.top_left().x-sx-dx, old_place.top_left().x+sx+dx), 
+    p1=Point( random.randint(old_place.top_left().x-sx-dx, old_place.top_left().x+sx+dx),
               random.randint(old_place.top_left().y-sy-dy, old_place.top_left().y+sy+dy) )
     p2=Point(p1.x+dx,p1.y+dy)
     place=Rect(p1,p2)
@@ -279,7 +279,7 @@ def plantForest(nature, seedlings, wealth, spreading ):
             element=createNatureFree(3,3)
             element.set_name('WOOD')
             nature.append(element)
-            
+
         print(' Growing forest')
         num_seedlings = len(nature)
         for i in range(0,200*wealth):
@@ -287,26 +287,26 @@ def plantForest(nature, seedlings, wealth, spreading ):
             element=createNature(nature[seedling],3,3,3,3)
             element.set_name('WOOD')
             nature.append(element)
-        
+
 
         #Move the trees around to enlarge the forest
         touch=spreading
         while(touch):
             touch-=1
             print('*', end=' ')
-            for place in nature:        
+            for place in nature:
                 for place2 in nature:
                     if(not (id(place)==id(place2))):
                         if(place.overlaps(place2)):
                             # move 20-30 px in the cardinal directions
-                            place.move(random.randint(0,4),random.randint(20,30))   
+                            place.move(random.randint(0,4),random.randint(20,30))
     return nature
 
 
 def dredgeRiver(nature):
 
     rivers = RESOURCES.count('RIVERX')
-    print('Building %d river%s' % ( rivers, 's' if rivers>1 else '')) 
+    print('Building %d river%s' % ( rivers, 's' if rivers>1 else ''))
 
     for p in range(0,RESOURCES.count('RIVERX')):
         rivert=[]
@@ -316,7 +316,7 @@ def dredgeRiver(nature):
             element=Rect(Point(i,liney),Point(i,liney+river_size))
             element.set_name('RIVER')
             rivert.append(element)
-        
+
         prev=0;
         for f in rivert:
             prev=prev+random.randint(-1,1)
@@ -330,16 +330,16 @@ def dredgeRiver(nature):
         for i in range(0,config['CITY_SIZE_Y']):
             element=Rect(Point(linex,i),Point(linex+river_size,i))
             element.set_name('RIVER')
-            rivert.append(element)  
+            rivert.append(element)
         prev=0;
         for f in rivert:
             prev=prev+random.randint(-1,1)
             f.move(2,prev)
-        nature.extend(rivert)       
+        nature.extend(rivert)
 
 def digCave(nature):
     caves = RESOURCES.count('CAVE')
-    print('Digging %d cave%s' % ( caves, 's' if caves > 1 else '')) 
+    print('Digging %d cave%s' % ( caves, 's' if caves > 1 else ''))
     for p in range(0,RESOURCES.count('CAVE')):
         CX  = config['CITY_SIZE_X']
         CY  = config['CITY_SIZE_Y']
@@ -372,7 +372,7 @@ def contains(l, e):
         if x.name==e:
             return True
     return False
-    
+
 print('Building the house')
 #CREAZIONE EDIFICI
 PLACESN=list(PLACES)
@@ -380,18 +380,18 @@ PLACES2=list(PLACES)
 for i in range(0,len(PLACESN)):
     #place=createPlacePoint(Point(int(config['CITY_SIZE_X']/2),int(config['CITY_SIZE_Y']/2)))
     info=getDefaultPlace(PLACESN[i], defaultPlace)
-    
+
     if(not (info[2]=='rural') or (info[2]=='free')):
         #se no e gia tra gli edifici aggiungilo e rimuovlo
         #se non e tra gli edifici saltalo
-        if(not contains(buildings, PLACESN[i])):        
+        if(not contains(buildings, PLACESN[i])):
             place=createPlaceDefault(Point(int(config['CITY_SIZE_X']/2),int(config['CITY_SIZE_Y']/2)),PLACESN[i])
             place.set_name(PLACESN[i])
             buildings.append(place)
             PLACES2.remove(PLACESN[i])
         else:
             pass
-PLACESN=PLACES2            
+PLACESN=PLACES2
 
 print('Building free house')
 for i in range(0,int((homeNumber/20))-len(buildings)):
@@ -597,7 +597,7 @@ def mappa_zone(buildings):
     zone=[ [[], []], [[], []] ]
     for place in buildings:
         # xx and yy are normalized to [0,1] within the overall image.
-        # 
+        #
         yy=not_less_bounds(int(place.top/(config['CITY_SIZE_Y']/2)),0,1)
         xx=not_less_bounds(int(place.left/(config['CITY_SIZE_X']/2)),0,1)
         test_temp(xx,yy,place)
@@ -773,7 +773,7 @@ def draw_legend(draw):
         x=CSXTL+15
         y=TFS
         print(int(x),int(y),"label="+string)
-        draw.text( 
+        draw.text(
             ( x, y ),
             string,
             fill="red",font=font
