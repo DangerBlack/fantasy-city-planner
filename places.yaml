@@ -175,6 +175,13 @@ LAZARETTO:
 - '#FFFFFF'
 - La
 
+CHICKEN_BUTCHER_SHOP:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#FF9999'
+- Bu
+
 BUTCHER_SHOP:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
@@ -265,6 +272,71 @@ OBSERVATORY:
 - rural
 - '#0000CC'
 - Ob
+
+HOUSE:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- free
+- '#000066'
+- null
+
+DOCTOR:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#dd1111'
+- null
+
+SPICE_SHOP:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#30a03a'
+- null
+
+TANNER_SHOP:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- rural
+- '#aa7243'
+- null
+
+SCUPLTOR:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#a0a0aa'
+- null
+
+SADDLERY:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#614126'
+- null
+
+FISHMONGER:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- free
+- '#396992'
+- null
+
+JEWELER:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#d3abdf'
+- null
+
+COPYIST:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#dfd3ab'
+- null
+
+
 
 unknown:
 - MIN_PLACE_SIZE
