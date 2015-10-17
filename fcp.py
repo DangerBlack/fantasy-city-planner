@@ -578,6 +578,7 @@ def not_less_bounds(number,lower,upper):
     return number
 
 
+# RETURNS FALSE if no overlaps, returns number (1..4) if there are
 def test_temp(yy,xx,place):
     CX=config['CITY_SIZE_X']
     CY=config['CITY_SIZE_Y']
@@ -590,32 +591,38 @@ def test_temp(yy,xx,place):
 
     if(xx==0)and(yy==0):
         if(not nw.overlaps(place)):
-            print('errore micidiale 1 (nw)');
-            return False
+            return 1
     if(xx==0)and(yy==1):
         if(not ne.overlaps(place)):
-            print('errore micidiale 2 (ne)');
-            return False
+            return 2
     if(xx==1)and(yy==0):
         if(not sw.overlaps(place)):
-            print('errore micidiale 3 (sw)');
-            return False
+            return 3
     if(xx==1)and(yy==1):
         if(not se.overlaps(place)):
-            print('errore micidiale 4 (se)');
-            return False
-    return True
+            return 4
+    return False
 
 
 def mappa_zone(buildings):
     zone=[ [[], []], [[], []] ]
+    overlaps=dict({4:0, 1:0, 2:0, 3:0})
     for place in buildings:
         # xx and yy are normalized to [0,1] within the overall image.
-        #
         yy=not_less_bounds(int(place.top/(config['CITY_SIZE_Y']/2)),0,1)
         xx=not_less_bounds(int(place.left/(config['CITY_SIZE_X']/2)),0,1)
-        test_temp(xx,yy,place)
+        ret_code = test_temp(xx,yy,place)
+        if ret_code:
+            if ret_code in overlaps:
+                overlaps[ret_code] += 1
+                    
         zone[yy][xx].append(place)
+
+    print('errore micidiale 1 (nw): %d' % overlaps[1])
+    print('errore micidiale 2 (ne): %d' % overlaps[2])
+    print('errore micidiale 3 (sw): %d' % overlaps[3])
+    print('errore micidiale 4 (se): %d' % overlaps[4])
+
 
     scambi=True
     duty=0
