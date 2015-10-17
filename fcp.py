@@ -447,7 +447,7 @@ def deduce_direction(field,duty):
 
 def get_direction(field,duty):
 	direction=[0,1,2,3]
-	if(duty>0.1) and (duty*random.random()>0.5):
+	if(duty>0.01) and (duty+random.random()>0.5):
 			direction=deduce_direction(field,duty)
 	return direction[random.randint(0,len(direction)-1)]
 
@@ -714,7 +714,7 @@ def mappa_zone(buildings):
 		res=map_all_and_work(zone,duty)
 		zone=res[0]
 		scambi=res[1]
-		duty=duty+0.1
+		duty=duty+0.01
 
 	print("Duty in my job:"+str(duty))
 	buildings=[]
