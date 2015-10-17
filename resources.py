@@ -152,7 +152,7 @@ def resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS):
         ('HEADGEAR',950),
         ('ILLUMINATOR',3900)
         ('INN',2000),
-        ('JEWELRY',400),
+        ('JEWELER',400),
         ('LOCKSMITH',1900),
         ('MAGIC_SHOPS',2800),
         ('MAIDSERVANTS',250),
@@ -193,7 +193,7 @@ def resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS):
         ('DOCTOR',1700),
         ('FISHMONGER',1200),
         ('INN',2000),
-        ('JEWELRY',2000),
+        ('JEWELER',2000),
         ('MAGIC_SHOPS',2800),
         ('SADDLERY',1000),
         ('SCULPTOR',2000),
