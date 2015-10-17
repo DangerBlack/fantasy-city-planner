@@ -891,8 +891,8 @@ def draw_scale(draw,ratio):
 
 def draw_title(draw, name, font):
 	draw.text((10,10),"City of "+name,fill="red",font=font)
-	draw.line((config['CITY_SIZE_X']/2,0,config['CITY_SIZE_X']/2,config['CITY_SIZE_Y']),width=1,fill='red');
-	draw.line((0,config['CITY_SIZE_Y']/2,config['CITY_SIZE_X'],config['CITY_SIZE_Y']/2),width=1,fill='red');
+	#draw.line((config['CITY_SIZE_X']/2,0,config['CITY_SIZE_X']/2,config['CITY_SIZE_Y']),width=1,fill='red');
+	#draw.line((0,config['CITY_SIZE_Y']/2,config['CITY_SIZE_X'],config['CITY_SIZE_Y']/2),width=1,fill='red');
 
 
 draw_legend(draw)
