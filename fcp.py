@@ -759,11 +759,12 @@ for place in buildings:
 
     if(not place.name=='HOUSE'):
         abbr = info[4]
-        draw.text(
-            (place.top_left().x+3,place.top_left().y),
-            abbr,
-            fill="red",font=fontsm
-        )
+        if abbr:
+            draw.text(
+                (place.top_left().x+3,place.top_left().y),
+                abbr,
+                fill="red",font=fontsm
+            )
 
 
 
