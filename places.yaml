@@ -108,9 +108,7 @@ BOOKBINDERS_SHOP::
 - MAX_PLACE_SIZE
 - urban
 - '#ee0000'
-- Br
-
-
+- Bo
 
 TAILOR_SHOP:
 - MIN_PLACE_SIZE
@@ -180,7 +178,7 @@ CHICKEN_BUTCHER_SHOP:
 - MAX_PLACE_SIZE
 - urban
 - '#FF9999'
-- Bu
+- Ci
 
 BUTCHER_SHOP:
 - MIN_PLACE_SIZE
@@ -264,7 +262,7 @@ ARENA:
 - MAX_PLACE_SIZE*2
 - urban
 - '#CC0000'
-- Ar
+- An
 
 OBSERVATORY:
 - MIN_PLACE_SIZE
@@ -387,5 +385,5 @@ CAVE:
 - null
 - null
 - '#000000'
-- Ca
+- Cv
 - fixed
