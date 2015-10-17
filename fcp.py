@@ -624,7 +624,7 @@ print('Controllo conflitti natura')
 for place in list(buildings):
     for n in list(nature):
         if(place.overlaps(n)):
-            if(defaultResurce[n.name][1]=='removable'):
+            if(defaultPlace[n.name][5]=='removable'):
                 nature.remove(n)
             else:
                 if(place.name=='HOUSE'):
@@ -685,9 +685,9 @@ draw = ImageDraw.Draw(img)
 #STAMPA NATURA
 for n in nature:
     if(not n.name=='CAVE'):
-        draw.rectangle(n.get_list(), fill=defaultResurce[n.name][0])
+        draw.rectangle(n.get_list(), fill=defaultPlace[n.name][3])
     else:
-        draw.polygon(createPolygonFromRect(n,5), fill=defaultResurce[n.name][0])
+        draw.polygon(createPolygonFromRect(n,5), fill=defaultPlace[n.name][3])
 
 #STAMPA CINTA MURARIA
 draw.line(perim,width=2,fill='#1A1A1A');
