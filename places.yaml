@@ -285,56 +285,56 @@ DOCTOR:
 - MAX_PLACE_SIZE
 - urban
 - '#dd1111'
-- null
+- MD
 
 SPICE_SHOP:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
 - urban
 - '#30a03a'
-- null
+- Sp
 
 TANNER_SHOP:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
 - rural
 - '#aa7243'
-- null
+- Tn
 
 SCUPLTOR:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
 - urban
 - '#a0a0aa'
-- null
+- Su
 
 SADDLERY:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
 - urban
 - '#614126'
-- null
+- Sd
 
 FISHMONGER:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
 - free
 - '#396992'
-- null
+- Fi
 
 JEWELER:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
 - urban
 - '#d3abdf'
-- null
+- Je
 
 COPYIST:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE
 - urban
 - '#dfd3ab'
-- null
+- Co
 
 
 
