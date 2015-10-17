@@ -270,10 +270,9 @@ buildings=[]
 
 
 # piantare alcuni alberi
-def plantForest(seedlings, wealth, spreading ):
+def plantForest(nature, seedlings, wealth, spreading ):
 
     print('Planting forest')
-    nature=[]
     if('WOOD' in RESOURCES):
         print(' Planting %s random seedlings' % seedlings)
         for i in range(0,seedlings):
@@ -303,52 +302,70 @@ def plantForest(seedlings, wealth, spreading ):
                             place.move(random.randint(0,4),random.randint(20,30))   
     return nature
 
-nature = plantForest(config['SEEDLINGS'], config['WEALTH'], config['WOOD_SPREADING'])
+
+def dredgeRiver(nature):
+
+    rivers = RESOURCES.count('RIVERX')
+    print('Building %d river%s' % ( rivers, 's' if rivers>1 else '')) 
+
+    for p in range(0,RESOURCES.count('RIVERX')):
+        rivert=[]
+        liney=random.randint(0,config['CITY_SIZE_Y'])
+        river_size=random.randint(3,120)
+        for i in range(0,config['CITY_SIZE_X']):
+            element=Rect(Point(i,liney),Point(i,liney+river_size))
+            element.set_name('RIVER')
+            rivert.append(element)
+        
+        prev=0;
+        for f in rivert:
+            prev=prev+random.randint(-1,1)
+            f.move(1,prev)
+        nature.extend(rivert)
+
+    for p in range(0,RESOURCES.count('RIVERY')):
+        rivert=[]
+        linex=random.randint(0,config['CITY_SIZE_X'])
+        river_size=random.randint(3,120)
+        for i in range(0,config['CITY_SIZE_Y']):
+            element=Rect(Point(linex,i),Point(linex+river_size,i))
+            element.set_name('RIVER')
+            rivert.append(element)  
+        prev=0;
+        for f in rivert:
+            prev=prev+random.randint(-1,1)
+            f.move(2,prev)
+        nature.extend(rivert)       
+
+def digCave(nature):
+    caves = RESOURCES.count('CAVE')
+    print('Digging %d cave%s' % ( caves, 's' if caves > 1 else '')) 
+    for p in range(0,RESOURCES.count('CAVE')):
+        CX  = config['CITY_SIZE_X']
+        CY  = config['CITY_SIZE_Y']
+        CX2 = config['CITY_SIZE_X']//2
+        CY2 = config['CITY_SIZE_Y']//2
+        CX3 = config['CITY_SIZE_X']//3
+        CY3 = config['CITY_SIZE_Y']//3
+        p=Point(CX2,CY2)
+        MPS=200
+        mps=30
+        if(random.randint(0,1)==0):
+            p1=Point(random.randint(0,CX3),random.randint(0,CY))
+        else:
+            p1=Point(random.randint(0,CX),random.randint(0,CY3))
+
+        p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
+        place=Rect(p1,p2)
+        place.set_name('CAVE')
+        nature.append(place)
+
+
+nature=[]
+plantForest(nature,config['SEEDLINGS'], config['WEALTH'], config['WOOD_SPREADING'])
+dredgeRiver(nature)
+digCave(nature)
 print('[10/10]')
-
-print('Building river')
-
-for p in range(0,RESOURCES.count('RIVERX')):
-    rivert=[]
-    liney=random.randint(0,config['CITY_SIZE_Y'])
-    river_size=random.randint(3,120)
-    for i in range(0,config['CITY_SIZE_X']):
-        element=Rect(Point(i,liney),Point(i,liney+river_size))
-        element.set_name('RIVER')
-        rivert.append(element)
-    
-    prev=0;
-    for f in rivert:
-        prev=prev+random.randint(-1,1)
-        f.move(1,prev)
-    nature.extend(rivert)
-
-for p in range(0,RESOURCES.count('RIVERY')):
-    rivert=[]
-    linex=random.randint(0,config['CITY_SIZE_X'])
-    river_size=random.randint(3,120)
-    for i in range(0,config['CITY_SIZE_Y']):
-        element=Rect(Point(linex,i),Point(linex+river_size,i))
-        element.set_name('RIVER')
-        rivert.append(element)  
-    prev=0;
-    for f in rivert:
-        prev=prev+random.randint(-1,1)
-        f.move(2,prev)
-    nature.extend(rivert)       
-
-for p in range(0,RESOURCES.count('CAVE')):
-    p=Point(int(config['CITY_SIZE_X']/2),int(config['CITY_SIZE_Y']/2))
-    MPS=200
-    mps=30
-    if(random.randint(0,1)==0):
-        p1=Point(random.randint(0,int(config['CITY_SIZE_X']/3)),random.randint(0,config['CITY_SIZE_Y']))
-    else:
-        p1=Point(random.randint(0,config['CITY_SIZE_X']),random.randint(0,int(config['CITY_SIZE_Y']/3)))
-    p2=Point(random.randint(p1.x+mps,p1.x+MPS), random.randint(p1.y+mps,p1.y+MPS))
-    place=Rect(p1,p2)
-    place.set_name('CAVE')
-    nature.append(place)
 
 def contains(l, e):
     for x in l:
