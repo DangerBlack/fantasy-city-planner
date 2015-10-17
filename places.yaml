@@ -37,7 +37,7 @@ SANCTUARY:
 - MIN_PLACE_SIZE
 - MAX_PLACE_SIZE*2
 - free
-- '#009999'
+- '#007989'
 - Sc
 
 CHURCH:
