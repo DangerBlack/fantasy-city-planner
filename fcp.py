@@ -37,13 +37,11 @@ from config import *
 
 config = load_config_file()
 places = load_yaml_file('places.yaml')
-resources = load_yaml_file('resources.yaml')
 
 random.seed(1029384756) # repeatabilty for testing
 
 print(config)
 print(places)
-print(resources)
 
 FONT_DIR="fonts/"
 font_size = config['FONT_SIZE']
@@ -99,7 +97,6 @@ resource_consistency_check(PLACES, RESOURCES, WEALTH, INHABITANTS)
 #get defaults
 
 defaultPlace = get_default_places(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH)
-defaultResurce = get_default_resurces(MIN_PLACE_SIZE, MAX_PLACE_SIZE, WEALTH) 
 
 
 def createPlaceFree():
