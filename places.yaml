@@ -273,3 +273,47 @@ unknown:
 - '#000066'
 - Uk
 
+
+#----------
+# Resources
+#----------
+
+WOOD:
+- null
+- null
+- null
+- '#00FF00'
+- Wo
+- removable
+
+RIVER:
+- null
+- null
+- null
+- '#00CCFF'
+- Ri
+- fixed
+
+RIVERX:
+- null
+- null
+- null
+- '#00CCFF'
+- Rx
+- fixed
+
+RIVERY:
+- null
+- null
+- null
+- '#00CCFF'
+- fixed
+- Ry
+
+CAVE:
+- null
+- null
+- null
+- '#000000'
+- Ca
+- fixed

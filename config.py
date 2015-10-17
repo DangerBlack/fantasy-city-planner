@@ -49,5 +49,5 @@ if __name__ == "__main__":
     places = load_yaml_file('places.yaml')
     print(places)
 
-    resources = load_yaml_file('resources.yaml')
-    print(resources)
+#    resources = load_yaml_file('resources.yaml')
+#    print(resources)
