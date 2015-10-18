@@ -840,21 +840,23 @@ def get_legend_width(maxsize,columns):
 
 #INIZIO STAMPA
 
-LIGHT_PLACES=list(set(PLACES))
-LIGHT_PLACES=sorted(LIGHT_PLACES)
-print(LIGHT_PLACES, len(LIGHT_PLACES))
-WIDTH_LEGEND=int(len(LIGHT_PLACES)*config['FONT_SIZE']/config['CITY_SIZE_Y']+1);
-print('servirebbero +'+str(WIDTH_LEGEND)+' COLONNE')
+LIGHT_PLACES=sorted(list(set(PLACES)))
+print('LIGHT_PLACES', len(LIGHT_PLACES), LIGHT_PLACES)
+
+LEGEND_COLUMNS=int(len(LIGHT_PLACES)*config['FONT_SIZE']/config['CITY_SIZE_Y']+1);
+print('servirebbero +'+str(LEGEND_COLUMNS)+' COLONNE')
 
 #GENERA DIMENSIONE TESTO LEGENDA SU MAPPA
 # get largest dimension of legend text, set the legend width based on that
 maxsize=1
 for i in range(0,len(PLACES)):
-	if(font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]>maxsize):
-		maxsize=font.getsize(PLACES[i][0:1]+": "+PLACES[i].lower().title())[0]
-maxsize=maxsize+30
+    label = make_label(PLACES[i])
+    font_size = font.getsize(label)
+    if(font_size[0]>maxsize):
+        maxsize=font_size[0]
+legend_width = get_legend_width(maxsize,LEGEND_COLUMNS)
 
-CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+maxsize*WIDTH_LEGEND+75  # 75px fudge-factor for buildinsg outside the eastern walls
+CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+legend_width +75 # 75px fudge-factor for buildinsg outside the eastern walls
 
 img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(config['CITY_SIZE_Y'])), "#C8C8C8") # create a new black image
 pixels = img.load() # create the pixel map
@@ -896,43 +898,69 @@ for place in buildings:
 
 
 #STAMPA LEGENDA
-def draw_legend(draw):
-	# Draw basic box
-	draw.rectangle((CITY_SIZE_X_TRUE-maxsize*WIDTH_LEGEND-5,5,CITY_SIZE_X_TRUE-5,config['CITY_SIZE_Y']-5), fill='white', outline='black' )
+def draw_legend(draw,maxsize,columns):
 
-	LEFT=WIDTH_LEGEND
+	# border outside the legend
+	buf=config['LEGEND_BUF']
+    
+	# color_box_width and offset from left side of column
+	box_offset = config['LEGEND_BOX_OFFSET']
+	box_width = config['LEGEND_BOX_WIDTH']
+
+	# label offset from left side of column
+	label_offset = config['LEGEND_LABEL_OFFSET']
+
+	legend_width = get_legend_width(maxsize,columns)
+	legend_x = CITY_SIZE_X_TRUE - legend_width - buf
+	legend_y = buf
+
+	# Draw basic box
+	draw.rectangle(
+	    (legend_x, legend_y,
+	     legend_x + legend_width, config['CITY_SIZE_Y']-buf), 
+	    fill='white', outline='black' 
+	)
+
+	LEFT=LEGEND_COLUMNS
 	TOP=0
 
 	# loop over sorted places
 	for i in range(0,len(LIGHT_PLACES)):
 
 		# move to next column if needed
-		if((TOP*(config['FONT_SIZE']+1)+10)>config['CITY_SIZE_Y']):
+		if((TOP*(config['FONT_SIZE']+1)+10)>config['CITY_SIZE_Y']-buf):
 			TOP=0
 			LEFT=LEFT-1
 
 		info=getDefaultPlace(LIGHT_PLACES[i], defaultPlace)
+		color = info[3]
+		abbr = info[4]
 
-		CSXTL = CITY_SIZE_X_TRUE-maxsize*LEFT
-		TFS = 10 + TOP*config['FONT_SIZE']
+		CSXTL = legend_x
+		TFS = legend_y + TOP*config['FONT_SIZE']
 
 		# draw a colored box
 		draw.rectangle( (
-			CSXTL+5, TFS+1,
-			CSXTL+10,TFS+config['FONT_SIZE']-2
-			),fill=info[3]
+			CSXTL+box_offset, TFS+2,
+			CSXTL+box_offset+box_width, TFS+config['FONT_SIZE']-2
+			),fill=color
 		)
 
 		# Draw text
-		label = LIGHT_PLACES[i].lower().title()
-		abbr = info[4]
-		string = abbr+': '+label
-		x=CSXTL+15
+		label = make_label(LIGHT_PLACES[i])
+
+		x=CSXTL + box_offset*2 + box_width
 		y=TFS
-		print(int(x),int(y),"label="+string)
+		print(int(x),int(y),"label="+label)
 		draw.text(
 			( x, y ),
-			string,
+			abbr + ':',
+			fill="red",font=font
+		)
+
+		draw.text(
+			( x+label_offset, y ),
+			label,
 			fill="red",font=font
 		)
 
@@ -960,7 +988,7 @@ def draw_title(draw, name, font):
 	#draw.line((0,config['CITY_SIZE_Y']/2,config['CITY_SIZE_X'],config['CITY_SIZE_Y']/2),width=1,fill='red');
 
 
-draw_legend(draw)
+draw_legend(draw,maxsize,LEGEND_COLUMNS)
 draw_scale(draw,config['METER_PIXEL_RATIO'])
 draw_title(draw, config['CITY_NAME'], font)
 
