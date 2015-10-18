@@ -896,6 +896,9 @@ for place in buildings:
 			)
 
 
+def abbr_sort(id):
+	info = getDefaultPlace(LIGHT_PLACES[id], defaultPlace)
+	return info[4]
 
 #STAMPA LEGENDA
 def draw_legend(draw,maxsize,columns):
@@ -925,7 +928,10 @@ def draw_legend(draw,maxsize,columns):
 	TOP=0
 
 	# loop over sorted places
-	for i in range(0,len(LIGHT_PLACES)):
+	places_range = range(0,len(LIGHT_PLACES))
+	places_sorted = sorted(places_range, key=abbr_sort)
+
+	for i in places_sorted:
 
 		# move to next column if needed
 		if((TOP*(config['FONT_SIZE']+1)+10)>config['CITY_SIZE_Y']-buf):
