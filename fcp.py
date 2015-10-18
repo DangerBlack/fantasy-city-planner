@@ -999,8 +999,8 @@ def draw_title(draw, name, font):
 	#draw.line((0,config['CITY_SIZE_Y']/2,config['CITY_SIZE_X'],config['CITY_SIZE_Y']/2),width=1,fill='red');
 
 
-draw_buildings(draw,buildings)
 draw_nature(draw,nature)
+draw_buildings(draw,buildings)
 draw_wall(draw,perim)
 
 
