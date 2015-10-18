@@ -26,6 +26,7 @@ from functools import partial
 import os
 import pickle
 import parser
+import re
 
 from rect import Point
 from rect import Rect
@@ -111,6 +112,9 @@ def eval_eqn(string):
 	evaluated=eval(code)
 	#print("Out-> ",str(evaluated))
 	return evaluated
+
+def make_label(str):
+    return re.sub('_', ' ', str.lower().title())
 
 
 def createPlaceDefault(p,name):
@@ -820,6 +824,15 @@ natureConflict(buildings, nature)
 print('The city has '+str(len(buildings))+
 	  ' instead of '+str(homeNumber)+
 	  ' suggested inhabitants '+str(len(buildings)*(14-WEALTH)))
+
+
+def get_legend_width(maxsize,columns):
+    width  = maxsize * columns 
+    width += config['LEGEND_LABEL_OFFSET'] 
+    width += config['LEGEND_BOX_WIDTH'] 
+    width += config['LEGEND_BOX_OFFSET'] * 2
+    width += config['LEGEND_BUF'] * 2
+    return width
 
 
 
