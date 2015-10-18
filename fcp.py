@@ -858,42 +858,47 @@ legend_width = get_legend_width(maxsize,LEGEND_COLUMNS)
 
 CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+legend_width +75 # 75px fudge-factor for buildinsg outside the eastern walls
 
+# Create image and drawing objects
 img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(config['CITY_SIZE_Y'])), "#C8C8C8") # create a new black image
 pixels = img.load() # create the pixel map
 draw = ImageDraw.Draw(img)
 
 
 #STAMPA NATURA
-for n in nature:
-	if(not n.name=='CAVE'):
-		draw.rectangle(n.get_list(), fill=defaultPlace[n.name][3])
-	else:
-		draw.polygon(createPolygonFromRect(n,5), fill=defaultPlace[n.name][3])
+def draw_nature(draw,n):
+    for n in nature:
+        if(not n.name=='CAVE'):
+            draw.rectangle(n.get_list(), fill=defaultPlace[n.name][3])
+        else:
+            draw.polygon(createPolygonFromRect(n,5), fill=defaultPlace[n.name][3])
 
 #STAMPA CINTA MURARIA
-if( 'WALL' in RESOURCES ):
-    draw.line(perim,width=2,fill=config['WALL_COLOR']);
+def draw_wall(draw,perim):
+    if( 'WALL' in RESOURCES ):
+        draw.line(perim,width=2,fill=config['WALL_COLOR']);
+
 
 #STAMPA EDIFICI
-# Label buildings
-for place in buildings:
-	outline = config['DEFAULT_COLOR']
-	fill=None
-	if(not place.name=='HOUSE'):
-		info=getDefaultPlace(place.name, defaultPlace)
-		fill = info[3]
+# Draw buildings
+def draw_buildings(draw,buildings):
+    for place in buildings:
+        outline = config['DEFAULT_COLOR']
+        fill=None
+        if(not place.name=='HOUSE'):
+            info=getDefaultPlace(place.name, defaultPlace)
+            fill = info[3]
 
-	# Draw the rectangle firsts, so the text is on top.
-	draw.rectangle(place.get_list(), outline=outline, fill=fill)
+        # Draw the rectangle firsts, so the text is on top.
+        draw.rectangle(place.get_list(), outline=outline, fill=fill)
 
-	if(not place.name=='HOUSE'):
-		abbr = info[4]
-		if abbr:
-			draw.text(
-				(place.top_left().x+3,place.top_left().y),
-				abbr,
-				fill="red",font=fontsm
-			)
+        if(not place.name=='HOUSE'):
+            abbr = info[4]
+            if abbr:
+                draw.text(
+                    (place.top_left().x+3,place.top_left().y),
+                    abbr,
+                    fill="red",font=fontsm
+                )
 
 
 def abbr_sort(id):
@@ -994,6 +999,14 @@ def draw_title(draw, name, font):
 	#draw.line((0,config['CITY_SIZE_Y']/2,config['CITY_SIZE_X'],config['CITY_SIZE_Y']/2),width=1,fill='red');
 
 
+draw_buildings(draw,buildings)
+draw_nature(draw,nature)
+draw_wall(draw,perim)
+
+
+
+
+# These happen at the end, after drawing all features.
 draw_legend(draw,maxsize,LEGEND_COLUMNS)
 draw_scale(draw,config['METER_PIXEL_RATIO'])
 draw_title(draw, config['CITY_NAME'], font)
