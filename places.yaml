@@ -283,7 +283,7 @@ DOCTOR:
 - MAX_PLACE_SIZE
 - urban
 - '#dd1111'
-- MD
+- Md
 
 SPICE_SHOP:
 - MIN_PLACE_SIZE
