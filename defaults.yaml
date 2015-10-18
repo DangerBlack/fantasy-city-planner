@@ -60,3 +60,12 @@ FONT_LIST:
 - OldLondon.ttf
 - Ruritania.ttf
 
+# border around legend
+LEGEND_BUF: 3
+
+# colored box offset from left, and width
+LEGEND_BOX_OFFSET: 3
+LEGEND_BOX_WIDTH: 6
+
+# Offset from left of column to start the label
+LEGEND_LABEL_OFFSET: 37
