@@ -45,7 +45,7 @@ print(places)
 
 FONT_DIR="fonts/"
 font_size = config['FONT_SIZE']
-font_size_sm = int(font_size*0.75)
+font_size_sm = int(font_size*0.66)
 font_size_lg = int(font_size*1.25)
 font   = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], font_size)
 fontsm = ImageFont.truetype(FONT_DIR+config['FONT_LIST'][0], font_size_sm)
