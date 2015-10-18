@@ -334,6 +334,13 @@ COPYIST:
 - '#dfd3ab'
 - Co
 
+TAVERN:
+- MIN_PLACE_SIZE
+- MAX_PLACE_SIZE
+- urban
+- '#ffa500'
+- Tv
+
 
 
 unknown:
