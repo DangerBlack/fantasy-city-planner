@@ -27,6 +27,7 @@ import os
 import pickle
 import parser
 import re
+import datetime
 
 from rect import Point
 from rect import Rect
@@ -34,6 +35,9 @@ from hull import *
 from resources import *
 from defaults import *
 from config import *
+
+current_time = datetime.datetime.now().time()
+print(current_time);
 
 
 config = load_config_file()
@@ -125,7 +129,7 @@ def createPlaceDefault(p,name):
 	mps=eval_eqn(defaultPlace[name][0])
 	MPS=eval_eqn(defaultPlace[name][1])
 
-	print(name,mps,MPS)
+	#print(name,mps,MPS)
 
 	thirdx = config['CITY_SIZE_X']//3
 	thirdx_up = thirdx + MPS
@@ -416,7 +420,7 @@ for i in range(0,len(PLACESN)):
 
 PLACESN=PLACES2
 
-print(PLACESN)
+#print(PLACESN)
 
 print('Building free house')
 for i in range(0,int((homeNumber/20))-len(buildings)):
@@ -434,6 +438,17 @@ def deduce_direction(field,duty):
 	YY=field[0]
 	XX=field[1]
 	direction=[0,1,2,3]
+	#if XX==0 and YY==0:
+	if XX==1 and YY==0:
+		direction.remove(0)
+	if XX==1 and YY==1:
+		direction.remove(1)
+	if XX==0 and YY==1:
+		direction.remove(2)
+		direction.remove(1)
+	
+	
+	'''#oldways 
 	if XX==0 and YY==0:
 		direction.remove(2)
 		direction.remove(3)
@@ -446,6 +461,9 @@ def deduce_direction(field,duty):
 	if XX==1 and YY==1:
 		direction.remove(0)
 		direction.remove(1)
+	'''	
+		
+		
 	return direction
 
 
@@ -464,15 +482,19 @@ class Edge:
 		self.bottom=bottom
 
 #THIS METHOD IS DONE PARALLEL DUE TO THE HUGE AMOUNT OF WORK!
-def conflictSolver(field,buildings,area,duty):
+def conflictSolver(field,buildings,area,duty,RANDOM=0):
+	random.seed(RANDOM)
 	top=[]
 	left=[]
 	right=[]
 	bottom=[]
 	touch=False
+	BOX_AREA_WIDE=0
 	while(not touch):
 		touch=True
 		for place in list(buildings):
+			if(BOX_AREA_WIDE<max(place.right-place.left,place.bottom-place.top)):
+				BOX_AREA_WIDE=max(place.right-place.left,place.bottom-place.top)
 			#place.name='DBG_'+str(field[0])+str(field[1])
 			for place2 in list(buildings):
 				if(not (id(place)==id(place2))):
@@ -531,7 +553,7 @@ def conflictSolver(field,buildings,area,duty):
 	
 	corner=Edge([],[],[],[])
 	
-	BOX_AREA_WIDE=max(20*WEALTH,MAX_PLACE_SIZE*WEALTH/2)
+	#BOX_AREA_WIDE=max(20*WEALTH,MAX_PLACE_SIZE*WEALTH/2)#<- this must substitute with the widest building in this area!
 	
 	area.top=area.top+BOX_AREA_WIDE
 	area.bottom=area.bottom-BOX_AREA_WIDE
@@ -569,10 +591,12 @@ def map_all_and_work(zone,duty):
 	ne=Rect(Point(config['CITY_SIZE_X']/2,0),Point(config['CITY_SIZE_X'],config['CITY_SIZE_Y']/2))
 	sw=Rect(Point(0,config['CITY_SIZE_Y']/2),Point(config['CITY_SIZE_X']/2,config['CITY_SIZE_Y']))
 	se=Rect(Point(config['CITY_SIZE_X']/2,config['CITY_SIZE_Y']/2),Point(config['CITY_SIZE_X'],config['CITY_SIZE_Y']))
-	workers.append(pool.apply_async(conflictSolver,[(0,0),zone[0][0],nw,duty]))
-	workers.append(pool.apply_async(conflictSolver,[(0,1),zone[0][1],ne,duty]))
-	workers.append(pool.apply_async(conflictSolver,[(1,0),zone[1][0],sw,duty]))
-	workers.append(pool.apply_async(conflictSolver,[(1,1),zone[1][1],se,duty]))
+	RANDOM_SEED=random.randint(0,10000)
+	
+	workers.append(pool.apply_async(conflictSolver,[(0,0),zone[0][0],nw,duty,RANDOM_SEED])) #now it's really consistent during testing! each thread has is own random!
+	workers.append(pool.apply_async(conflictSolver,[(0,1),zone[0][1],ne,duty,RANDOM_SEED+1]))
+	workers.append(pool.apply_async(conflictSolver,[(1,0),zone[1][0],sw,duty,RANDOM_SEED+2]))
+	workers.append(pool.apply_async(conflictSolver,[(1,1),zone[1][1],se,duty,RANDOM_SEED+3]))
 
 	pool.close()
 	pool.join()
@@ -769,9 +793,9 @@ def natureConflict(buildings, nature):
                         except ValueError as e:
                             pass
                     else:
-                        print('muovo a nord e su '+place.name)
-                        print(place)
-                        print(n)
+                        #print('muovo a nord e su '+place.name)
+                        #print(place)
+                        #print(n)
 
                         width=place.right-place.left
                         height=place.bottom-place.top
@@ -782,7 +806,7 @@ def natureConflict(buildings, nature):
                         x_overlap = place.right - n.left
                         y_overlap = place.bottom - n.top
 
-                        print(" (%d, %d) -> %d " % (x_overlap,y_overlap, min(x_overlap, y_overlap)))
+                        #print(" (%d, %d) -> %d " % (x_overlap,y_overlap, min(x_overlap, y_overlap)))
 
                         if x_overlap < width//2:
                             place.left  -= x_overlap
@@ -962,7 +986,7 @@ def draw_legend(draw,maxsize,columns):
 
 		x=CSXTL + box_offset*2 + box_width
 		y=TFS
-		print(int(x),int(y),"label="+label)
+		#print(int(x),int(y),"label="+label)
 		draw.text(
 			( x, y ),
 			abbr + ':',
@@ -1030,5 +1054,7 @@ pickle.dump(obj, f)
 
 print("Fantasy City Planner has finnished creating the city of "+config['CITY_NAME'])
 
+current_time = datetime.datetime.now().time()
+print(current_time);
 
 #im.save(sys.stdout, "PNG")
