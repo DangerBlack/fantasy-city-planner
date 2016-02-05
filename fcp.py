@@ -28,6 +28,7 @@ import pickle
 import parser
 import re
 import datetime
+from roads import *
 
 from rect import Point
 from rect import Rect
@@ -118,7 +119,7 @@ def eval_eqn(string):
 	return evaluated
 
 def make_label(str):
-    return re.sub('_', ' ', str.lower().title())
+	return re.sub('_', ' ', str.lower().title())
 
 
 def createPlaceDefault(p,name):
@@ -777,73 +778,77 @@ buildings=generaPlace(buildings,new_town)
 buildings=mappa_zone(buildings)
 
 def natureConflict(buildings, nature):
-    test_set_collision=[]
-    print('Controllo conflitti natura')
-    for place in list(buildings):
-        for n in list(nature):
-            if(place.overlaps(n)):
-                # If the natural object marked removable, do so.
-                if(defaultPlace[n.name][5]=='removable'):
-                    nature.remove(n)
-                else:
-                    # just remove plain houses if possible
-                    if(place.name=='HOUSE'):
-                        try:
-                            buildings.remove(place)
-                        except ValueError as e:
-                            pass
-                    else:
-                        #print('muovo a nord e su '+place.name)
-                        #print(place)
-                        #print(n)
+	test_set_collision=[]
+	print('Controllo conflitti natura')
+	for place in list(buildings):
+		for n in list(nature):
+			if(place.overlaps(n)):
+				# If the natural object marked removable, do so.
+				if(defaultPlace[n.name][5]=='removable'):
+					nature.remove(n)
+				else:
+					# just remove plain houses if possible
+					if(place.name=='HOUSE'):
+						try:
+							buildings.remove(place)
+						except ValueError as e:
+							pass
+					else:
+						#print('muovo a nord e su '+place.name)
+						#print(place)
+						#print(n)
 
-                        width=place.right-place.left
-                        height=place.bottom-place.top
-                        n_width = n.right-n.left
-                        n_height = n.bottom-n.top
+						width=place.right-place.left
+						height=place.bottom-place.top
+						n_width = n.right-n.left
+						n_height = n.bottom-n.top
 
-                        # Shift the smallest distance, then randomly U/D or L/R
-                        x_overlap = place.right - n.left
-                        y_overlap = place.bottom - n.top
+						# Shift the smallest distance, then randomly U/D or L/R
+						x_overlap = place.right - n.left
+						y_overlap = place.bottom - n.top
 
-                        #print(" (%d, %d) -> %d " % (x_overlap,y_overlap, min(x_overlap, y_overlap)))
+						#print(" (%d, %d) -> %d " % (x_overlap,y_overlap, min(x_overlap, y_overlap)))
 
-                        if x_overlap < width//2:
-                            place.left  -= x_overlap
-                            place.right -= x_overlap
-                        else:
-                            place.left  += width + x_overlap
-                            place.right += width + x_overlap
+						if x_overlap < width//2:
+							place.left  -= x_overlap
+							place.right -= x_overlap
+						else:
+							place.left  += width + x_overlap
+							place.right += width + x_overlap
 
-                        # vert is smaller
-                        if y_overlap < height//2:
-                            place.top    -= y_overlap
-                            place.bottom -= y_overlap
-                        else:
-                            place.top    += y_overlap + height 
-                            place.bottom += y_overlap + height 
+						# vert is smaller
+						if y_overlap < height//2:
+							place.top    -= y_overlap
+							place.bottom -= y_overlap
+						else:
+							place.top    += y_overlap + height 
+							place.bottom += y_overlap + height 
 
-                        if place.left < 1 or place.top < 1 or place.bottom > config['CITY_SIZE_Y'] or place.right > config['CITY_SIZE_X']:
-                            buildings.remove(place)
+						if place.left < 1 or place.top < 1 or place.bottom > config['CITY_SIZE_Y'] or place.right > config['CITY_SIZE_X']:
+							buildings.remove(place)
 
-                        test_set_collision.append(place)
-                        print(place)
-                        print('solved?')
-                        break
+						test_set_collision.append(place)
+						print(place)
+						print('solved?')
+						break
 
-    '''I'm so bored about collision between buildings I had to remove a special buildings!'''
-    for place in list(test_set_collision):
-        for place2 in list(test_set_collision):
-            if(not id(place)==id(place2)) and (place.overlaps(place2)):
-                try:
-                    print('non ho potutto fare a meno di cancellarlo: '+str(place))
-                    buildings.remove(place)
-                    break
-                except ValueError as e:
-                    pass
+	'''I'm so bored about collision between buildings I had to remove a special buildings!'''
+	for place in list(test_set_collision):
+		for place2 in list(test_set_collision):
+			if(not id(place)==id(place2)) and (place.overlaps(place2)):
+				try:
+					print('non ho potutto fare a meno di cancellarlo: '+str(place))
+					buildings.remove(place)
+					break
+				except ValueError as e:
+					pass
 
 
 natureConflict(buildings, nature)
+
+
+roads=generateRoads(buildings,config['CITY_SIZE_X'],config['CITY_SIZE_Y'])
+
 
 print('The city has '+str(len(buildings))+
 	  ' instead of '+str(homeNumber)+
@@ -851,12 +856,12 @@ print('The city has '+str(len(buildings))+
 
 
 def get_legend_width(maxsize,columns):
-    width  = maxsize * columns 
-    width += config['LEGEND_LABEL_OFFSET'] 
-    width += config['LEGEND_BOX_WIDTH'] 
-    width += config['LEGEND_BOX_OFFSET'] * 2
-    width += config['LEGEND_BUF'] * 2
-    return width
+	width  = maxsize * columns 
+	width += config['LEGEND_LABEL_OFFSET'] 
+	width += config['LEGEND_BOX_WIDTH'] 
+	width += config['LEGEND_BOX_OFFSET'] * 2
+	width += config['LEGEND_BUF'] * 2
+	return width
 
 
 
@@ -874,10 +879,10 @@ print('servirebbero +'+str(LEGEND_COLUMNS)+' COLONNE')
 # get largest dimension of legend text, set the legend width based on that
 maxsize=1
 for i in range(0,len(PLACES)):
-    label = make_label(PLACES[i])
-    font_size = font.getsize(label)
-    if(font_size[0]>maxsize):
-        maxsize=font_size[0]
+	label = make_label(PLACES[i])
+	font_size = font.getsize(label)
+	if(font_size[0]>maxsize):
+		maxsize=font_size[0]
 legend_width = get_legend_width(maxsize,LEGEND_COLUMNS)
 
 CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+legend_width +75 # 75px fudge-factor for buildinsg outside the eastern walls
@@ -886,43 +891,43 @@ CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+legend_width +75 # 75px fudge-factor for 
 img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(config['CITY_SIZE_Y'])), "#C8C8C8") # create a new black image
 pixels = img.load() # create the pixel map
 draw = ImageDraw.Draw(img)
-
+draw.line(roads,width=2,fill=config['WALL_COLOR']);
 
 #STAMPA NATURA
 def draw_nature(draw,n):
-    for n in nature:
-        if(not n.name=='CAVE'):
-            draw.rectangle(n.get_list(), fill=defaultPlace[n.name][3])
-        else:
-            draw.polygon(createPolygonFromRect(n,5), fill=defaultPlace[n.name][3])
+	for n in nature:
+		if(not n.name=='CAVE'):
+			draw.rectangle(n.get_list(), fill=defaultPlace[n.name][3])
+		else:
+			draw.polygon(createPolygonFromRect(n,5), fill=defaultPlace[n.name][3])
 
 #STAMPA CINTA MURARIA
 def draw_wall(draw,perim):
-    if( 'WALL' in RESOURCES ):
-        draw.line(perim,width=2,fill=config['WALL_COLOR']);
+	if( 'WALL' in RESOURCES ):
+		draw.line(perim,width=2,fill=config['WALL_COLOR']);
 
 
 #STAMPA EDIFICI
 # Draw buildings
 def draw_buildings(draw,buildings):
-    for place in buildings:
-        outline = config['DEFAULT_COLOR']
-        fill=None
-        if(not place.name=='HOUSE'):
-            info=getDefaultPlace(place.name, defaultPlace)
-            fill = info[3]
+	for place in buildings:
+		outline = config['DEFAULT_COLOR']
+		fill=None
+		if(not place.name=='HOUSE'):
+			info=getDefaultPlace(place.name, defaultPlace)
+			fill = info[3]
 
-        # Draw the rectangle firsts, so the text is on top.
-        draw.rectangle(place.get_list(), outline=outline, fill=fill)
+		# Draw the rectangle firsts, so the text is on top.
+		draw.rectangle(place.get_list(), outline=outline, fill=fill)
 
-        if(not place.name=='HOUSE'):
-            abbr = info[4]
-            if abbr:
-                draw.text(
-                    (place.top_left().x+3,place.top_left().y),
-                    abbr,
-                    fill="red",font=fontsm
-                )
+		if(not place.name=='HOUSE'):
+			abbr = info[4]
+			if abbr:
+				draw.text(
+					(place.top_left().x+3,place.top_left().y),
+					abbr,
+					fill="red",font=fontsm
+				)
 
 
 def abbr_sort(id):
@@ -934,7 +939,7 @@ def draw_legend(draw,maxsize,columns):
 
 	# border outside the legend
 	buf=config['LEGEND_BUF']
-    
+	
 	# color_box_width and offset from left side of column
 	box_offset = config['LEGEND_BOX_OFFSET']
 	box_width = config['LEGEND_BOX_WIDTH']
@@ -948,9 +953,9 @@ def draw_legend(draw,maxsize,columns):
 
 	# Draw basic box
 	draw.rectangle(
-	    (legend_x, legend_y,
-	     legend_x + legend_width, config['CITY_SIZE_Y']-buf), 
-	    fill='white', outline='black' 
+		(legend_x, legend_y,
+		 legend_x + legend_width, config['CITY_SIZE_Y']-buf), 
+		fill='white', outline='black' 
 	)
 
 	LEFT=LEGEND_COLUMNS
