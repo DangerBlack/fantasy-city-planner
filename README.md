@@ -39,7 +39,7 @@ You need python 2.7 in order to run this program
 ```bash
 sudo apt install python
 sudo apt install pip
-pip install Pillow pyyaml
+pip install Pillow pyyaml networkx
 ```
 
 

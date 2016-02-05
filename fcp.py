@@ -891,7 +891,7 @@ CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+legend_width +75 # 75px fudge-factor for 
 img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(config['CITY_SIZE_Y'])), "#C8C8C8") # create a new black image
 pixels = img.load() # create the pixel map
 draw = ImageDraw.Draw(img)
-draw.line(roads,width=2,fill=config['WALL_COLOR']);
+
 
 #STAMPA NATURA
 def draw_nature(draw,n):
@@ -1029,6 +1029,12 @@ def draw_title(draw, name, font):
 
 
 draw_nature(draw,nature)
+
+i=1
+while(i <len(roads)):
+	draw.line([roads[i-1],roads[i]],width=2,fill=config['WALL_COLOR']);
+	i=i+2
+#draw.line(roads,width=2,fill=config['WALL_COLOR']);
 draw_buildings(draw,buildings)
 draw_wall(draw,perim)
 

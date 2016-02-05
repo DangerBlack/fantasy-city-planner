@@ -1,4 +1,5 @@
 from networkx import nx
+import random
 from rect import Point
 from rect import Rect
 
@@ -12,6 +13,14 @@ def generateRoads(buildings,city_size_x,city_size_y):
 			snode.append(house)
 	
 	G=nx.Graph()
+	
+	#ADD ENTRY POINT FORM N E S W
+	
+	snode.append(Rect(Point(random.randint(0,city_size_x),0),Point(random.randint(0,city_size_x),0)))
+	#snode.append(Rect(Point(city_size_x,random.randint(0,city_size_y)),Point(city_size_x,random.randint(0,city_size_y))))
+	snode.append(Rect(Point(random.randint(0,city_size_x),city_size_y),Point(random.randint(0,city_size_x),city_size_y)))
+	#snode.append(Rect(Point(0,random.randint(0,city_size_y)),Point(0,random.randint(0,city_size_y))))
+	
 	for i in range(0,len(snode)):
 		for j in range(0,len(snode)):
 			p1=Point(snode[i].left,snode[i].top)
