@@ -55,12 +55,13 @@ def generateRoads(buildings,city_size_x,city_size_y):
 			p.append(find_edge(p,edgelist,p[-1]))
 			print(p)
 			
-	print('Il path finale è')
+	
 	
 	orderedpaths = reversed(sorted(path, key=len))
 	path=list(orderedpaths)
+	
+	print('Il path finale non filtrato è')
 	for p in orderedpaths:		
-		if(len(p)>3):
 			print(p)
 			
 	nogod=[]
@@ -74,9 +75,13 @@ def generateRoads(buildings,city_size_x,city_size_y):
 					break
 	for q in nogod:
 		path[q]='EOL'
+	
+	for p in path:		
+		print(p)
+			
 	fpath=[]
 	for p in path:		
-		if(len(p)>3):
+		if(len(p)>=3)and p!='EOL':
 			fpath.append(p)
 	
 	print('I cammini più lunghi sono')
