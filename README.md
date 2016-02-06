@@ -39,7 +39,8 @@ You need python 2.7 in order to run this program
 ```bash
 sudo apt install python
 sudo apt install pip
-pip install Pillow pyyaml networkx
+sudo apt install python3.4-dev
+pip install Pillow pyyaml networkx numpy scipy
 ```
 
 
