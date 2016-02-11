@@ -88,13 +88,34 @@ def generateRoads(buildings,city_size_x,city_size_y):
 	for p in fpath:
 		print(p)
 		
+	
+	controlPointPath=[]
+	count=0	
+	for q in fpath:
+		controlPointPath.append([])
+		for e in q:
+			controlPointPath[count].append([snode[e].left+snode[e].size_x()/2,snode[e].top+snode[e].size_y()/2])	
+		count=count+1
+	print('I punti di controllo sono')
+	
+	for p in controlPointPath:
+		print('Il cammino e')
+		print(p)
+		print('La sua curva e')
+		print(bezier_curve(p))
+	
 	print('Le edge sono queste')
 	print(edgelist)
 	print('Fine edge')
 	print('I punti sono questi')
 	print(res)
 	print('Fine punti')
-	return res
+	
+	beziers=[]
+	for e in controlPointPath:
+		beziers.append(bezier_curve(e))
+	print(len(controlPointPath[0]))
+	return beziers
 
 def find_edge(p,edgelist,node):
 	for e in edgelist:
@@ -142,5 +163,9 @@ def bezier_curve(points, nTimes=1000):
 
 	xvals = np.dot(xPoints, polynomial_array)
 	yvals = np.dot(yPoints, polynomial_array)
-
-	return xvals, yvals
+	
+	path=[]
+	for i in range(0,len(xvals)):
+		path.append((xvals[i],yvals[i]))
+		
+	return path #xvals, yvals

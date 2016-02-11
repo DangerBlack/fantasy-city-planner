@@ -1030,10 +1030,16 @@ def draw_title(draw, name, font):
 
 draw_nature(draw,nature)
 
-i=1
-while(i <len(roads)):
-	draw.line([roads[i-1],roads[i]],width=2,fill=config['WALL_COLOR']);
-	i=i+2
+
+def printRoads(roads):
+	i=1
+	while(i <len(roads)):
+		draw.line([roads[i-1],roads[i]],width=2,fill=config['WALL_COLOR']);
+		i=i+2
+
+for r in roads:
+	printRoads(r)
+	
 #draw.line(roads,width=2,fill=config['WALL_COLOR']);
 draw_buildings(draw,buildings)
 draw_wall(draw,perim)
