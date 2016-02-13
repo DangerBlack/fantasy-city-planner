@@ -44,7 +44,7 @@ print(current_time);
 config = load_config_file()
 places = load_yaml_file('places.yaml')
 
-random.seed(1029384756) # repeatabilty for testing
+random.seed(1029384756) # repeatabilty for testing 1029384756
 
 print(config)
 print(places)

@@ -59,10 +59,7 @@ def generateRoads(buildings,city_size_x,city_size_y):
 	
 	orderedpaths = reversed(sorted(path, key=len))
 	path=list(orderedpaths)
-	
-	print('Il path finale non filtrato è')
-	for p in orderedpaths:		
-			print(p)
+
 			
 	nogod=[]
 	for i in range(0,len(path)):
@@ -83,11 +80,30 @@ def generateRoads(buildings,city_size_x,city_size_y):
 	for p in path:		
 		if(len(p)>=3)and p!='EOL':
 			fpath.append(p)
-	
-	print('I cammini più lunghi sono')
-	for p in fpath:
-		print(p)
 		
+	lsp=[] #last stright path
+	for e in edgelist:
+		bot=0
+		for f in fpath:
+			if(e[0] in f and e[1] in f):
+				p=f.index(e[0])
+				q=f.index(e[1])
+				if(abs(q-p)!=1):
+					lsp.append(e)
+			else:
+				bot=bot+1
+		if(bot==len(fpath)):
+			lsp.append(e)
+	
+	print('Inzio a preoccuparmi dei path rimasti')
+	print(lsp)
+	
+	clsp=[]
+	for e in lsp:
+		clsp.append([(snode[e[0]].left+snode[e[0]].size_x()/2,snode[e[0]].top+snode[e[0]].size_y()/2),(snode[e[1]].left+snode[e[1]].size_x()/2,snode[e[1]].top+snode[e[1]].size_y()/2)])
+	
+	print('Inzio a preoccuparmi dei path rimasti 2')
+	print(clsp)
 	
 	controlPointPath=[]
 	count=0	
@@ -96,25 +112,16 @@ def generateRoads(buildings,city_size_x,city_size_y):
 		for e in q:
 			controlPointPath[count].append([snode[e].left+snode[e].size_x()/2,snode[e].top+snode[e].size_y()/2])	
 		count=count+1
-	print('I punti di controllo sono')
 	
-	for p in controlPointPath:
-		print('Il cammino e')
-		print(p)
-		print('La sua curva e')
-		print(bezier_curve(p))
-	
-	print('Le edge sono queste')
-	print(edgelist)
-	print('Fine edge')
-	print('I punti sono questi')
-	print(res)
-	print('Fine punti')
 	
 	beziers=[]
 	for e in controlPointPath:
 		beziers.append(bezier_curve(e))
 	print(len(controlPointPath[0]))
+	for l in clsp:
+		beziers.append(l)
+		
+	print(len(beziers))		
 	return beziers
 
 def find_edge(p,edgelist,node):
