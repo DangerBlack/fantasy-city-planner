@@ -45,6 +45,8 @@ MIN_PLACE_SIZE: 6
 # Default color for buildings
 DEFAULT_COLOR: '#505050'
 WALL_COLOR: '#1a1a1a'
+BG_COLOR: '#FFFFFF'
+ROADS_COLOR: '#C8C8C8'
 
 # How many starting trees to use
 SEEDLINGS: 15

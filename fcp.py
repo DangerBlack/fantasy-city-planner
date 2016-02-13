@@ -888,7 +888,7 @@ legend_width = get_legend_width(maxsize,LEGEND_COLUMNS)
 CITY_SIZE_X_TRUE=config['CITY_SIZE_X']+legend_width +75 # 75px fudge-factor for buildinsg outside the eastern walls
 
 # Create image and drawing objects
-img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(config['CITY_SIZE_Y'])), "#C8C8C8") # create a new black image
+img = Image.new( 'RGB', (int(CITY_SIZE_X_TRUE),int(config['CITY_SIZE_Y'])), config['BG_COLOR']) # create a new black image
 pixels = img.load() # create the pixel map
 draw = ImageDraw.Draw(img)
 
@@ -1034,7 +1034,7 @@ draw_nature(draw,nature)
 def printRoads(roads):
 	i=1
 	while(i <len(roads)):
-		draw.line([roads[i-1],roads[i]],width=2,fill=config['WALL_COLOR']);
+		draw.line([roads[i-1],roads[i]],width=2,fill=config['ROADS_COLOR']);
 		i=i+2
 
 for r in roads:
