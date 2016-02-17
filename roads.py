@@ -21,16 +21,21 @@ def generateRoads(RESOURCES,buildings,city_size_x,city_size_y):
 	G=nx.Graph()
 	
 	#ADD ENTRY POINT FORM N E S W
-	
+	more_nodes=0
 	if('ROAD_N' in RESOURCES):
 		snode.append(Rect(Point(random.randint(0,city_size_x),0),Point(random.randint(0,city_size_x),0)))
+		more_nodes=more_nodes+1
 	if('ROAD_E' in RESOURCES):
 		snode.append(Rect(Point(city_size_x,random.randint(0,city_size_y)),Point(city_size_x,random.randint(0,city_size_y))))
+		more_nodes=more_nodes+1
 	if('ROAD_S' in RESOURCES):
 		snode.append(Rect(Point(random.randint(0,city_size_x),city_size_y),Point(random.randint(0,city_size_x),city_size_y)))
+		more_nodes=more_nodes+1
 	if('ROAD_W' in RESOURCES):
 		snode.append(Rect(Point(0,random.randint(0,city_size_y)),Point(0,random.randint(0,city_size_y))))
+		more_nodes=more_nodes+1
 	
+	#creating the full connected graph
 	for i in range(0,len(snode)):
 		for j in range(0,len(snode)):
 			p1=Point(snode[i].left,snode[i].top)
@@ -38,11 +43,14 @@ def generateRoads(RESOURCES,buildings,city_size_x,city_size_y):
 			G.add_edge(i,j,weight=p1.distance_to(p2))
 		#G.add_edge(s.top,s.rigth,weight=1)
 	
+	#generating the minimum spanning tree
 	mst=nx.minimum_spanning_edges(G,data=False)
 	
 	edgelist=sorted(list(mst))
 	
+	#the couple of nodes in the MST
 	res=[]
+	#all the node in an array once
 	unified=[]
 	for e in edgelist:
 		res.append((snode[e[0]].left+snode[e[0]].size_x()/2,snode[e[0]].top+snode[e[0]].size_y()/2))
@@ -52,10 +60,13 @@ def generateRoads(RESOURCES,buildings,city_size_x,city_size_y):
 	#valuto il degree con G.degree(Nodo).values() se i nodi hanno degree 1  li metto nell'insieme, altrimenti mi fermo
 	
 	#HERE BE DRAGON, SORRY GUYS!
+	
+	#add each node in a path + the entry nodes
 	path=[]
-	for i in range(0,len(snode)+2):
+	for i in range(0,len(snode)+more_nodes):
 		path.append([i])
 		
+	#create a list of path each path is a sequence of node ending with EOL
 	p=[]
 	for p in path:
 		while(p[-1]!='EOL' and unified.count(p[-1])<3):
@@ -64,11 +75,12 @@ def generateRoads(RESOURCES,buildings,city_size_x,city_size_y):
 			print(p)
 			
 	
-	
+	#order the list of path by length
 	orderedpaths = reversed(sorted(path, key=len))
 	path=list(orderedpaths)
 
-			
+	
+	#try to detect path that are duplicated or subset of other path
 	nogod=[]
 	for i in range(0,len(path)):
 		print('sono a '+str(i))
@@ -78,17 +90,22 @@ def generateRoads(RESOURCES,buildings,city_size_x,city_size_y):
 				if r in path[j]:
 					nogod.append(j)
 					break
+					
+	#remove the duplicated path (named as nogod)
 	for q in nogod:
 		path[q]='EOL'
 	
+	#print a debug 
 	for p in path:		
 		print(p)
 			
+	#final path, path longer than 3 steps
 	fpath=[]
 	for p in path:		
 		if(len(p)>=3)and p!='EOL':
 			fpath.append(p)
-		
+	
+	#lsp is the final couple of path that are outside the fpath, se remains link between main path
 	lsp=[] #last stright path
 	for e in edgelist:
 		bot=0
@@ -118,7 +135,8 @@ def generateRoads(RESOURCES,buildings,city_size_x,city_size_y):
 	for q in fpath:
 		controlPointPath.append([])
 		for e in q:
-			controlPointPath[count].append([snode[e].left+snode[e].size_x()/2,snode[e].top+snode[e].size_y()/2])	
+			if(e!='EOL'):
+				controlPointPath[count].append([snode[e].left+snode[e].size_x()/2,snode[e].top+snode[e].size_y()/2])	
 		count=count+1
 	
 	
