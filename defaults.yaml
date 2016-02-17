@@ -1,4 +1,7 @@
 ---
+#random seed
+SEED: 1029384756
+
 # The city name
 CITY_NAME: Carcosa
 
@@ -21,6 +24,7 @@ PLACES: [ 'CASTLE', 'SANCTUARY', 'CHURCH' ]
 DEFENCE: 1
 SEA: [ NO, NO, NO, NO ]
 
+
 # Resources
 RESOURCES:
 - WOOD
@@ -28,6 +32,11 @@ RESOURCES:
 - LEATHER
 - HORSE
 - WALL
+- ROADS
+#- ROAD_N
+#- ROAD_E
+#- ROAD_S
+#- ROAD_W
 #- PIG
 #- CAVE
 #- WALL
@@ -46,7 +55,7 @@ MIN_PLACE_SIZE: 6
 DEFAULT_COLOR: '#505050'
 WALL_COLOR: '#1a1a1a'
 BG_COLOR: '#FFFFFF'
-ROADS_COLOR: '#C8C8C8'
+ROADS_COLOR: '#666666'
 
 # How many starting trees to use
 SEEDLINGS: 15

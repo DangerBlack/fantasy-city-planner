@@ -44,7 +44,7 @@ print(current_time);
 config = load_config_file()
 places = load_yaml_file('places.yaml')
 
-random.seed(1029384756) # repeatabilty for testing 1029384756
+random.seed(config['SEED']) # repeatabilty for testing 1029384756
 
 print(config)
 print(places)
@@ -847,7 +847,7 @@ def natureConflict(buildings, nature):
 natureConflict(buildings, nature)
 
 
-roads=generateRoads(buildings,config['CITY_SIZE_X'],config['CITY_SIZE_Y'])
+roads=generateRoads(RESOURCES,buildings,config['CITY_SIZE_X'],config['CITY_SIZE_Y'])
 
 
 print('The city has '+str(len(buildings))+

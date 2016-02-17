@@ -5,7 +5,11 @@ from rect import Rect
 import numpy as np
 from scipy.misc import comb
 
-def generateRoads(buildings,city_size_x,city_size_y):
+def generateRoads(RESOURCES,buildings,city_size_x,city_size_y):
+	
+	if(not 'ROADS' in RESOURCES):
+		return []
+	
 	snode=[]
 	important=["CATHEDRAL","CHURCH","INN","BARRACK","TAVERN","CASTLE","MARKET"]
 	print(city_size_x)
@@ -18,10 +22,14 @@ def generateRoads(buildings,city_size_x,city_size_y):
 	
 	#ADD ENTRY POINT FORM N E S W
 	
-	snode.append(Rect(Point(random.randint(0,city_size_x),0),Point(random.randint(0,city_size_x),0)))
-	#snode.append(Rect(Point(city_size_x,random.randint(0,city_size_y)),Point(city_size_x,random.randint(0,city_size_y))))
-	snode.append(Rect(Point(random.randint(0,city_size_x),city_size_y),Point(random.randint(0,city_size_x),city_size_y)))
-	#snode.append(Rect(Point(0,random.randint(0,city_size_y)),Point(0,random.randint(0,city_size_y))))
+	if('ROAD_N' in RESOURCES):
+		snode.append(Rect(Point(random.randint(0,city_size_x),0),Point(random.randint(0,city_size_x),0)))
+	if('ROAD_E' in RESOURCES):
+		snode.append(Rect(Point(city_size_x,random.randint(0,city_size_y)),Point(city_size_x,random.randint(0,city_size_y))))
+	if('ROAD_S' in RESOURCES):
+		snode.append(Rect(Point(random.randint(0,city_size_x),city_size_y),Point(random.randint(0,city_size_x),city_size_y)))
+	if('ROAD_W' in RESOURCES):
+		snode.append(Rect(Point(0,random.randint(0,city_size_y)),Point(0,random.randint(0,city_size_y))))
 	
 	for i in range(0,len(snode)):
 		for j in range(0,len(snode)):
